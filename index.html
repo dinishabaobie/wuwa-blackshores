@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鸣潮 · 黑海岸篇章</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='38' fill='none' stroke='%234d8ab5' stroke-width='7'/%3E%3Ccircle cx='50' cy='50' r='14' fill='%234d8ab5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- 开场加载层 -->
+  <div id="loader">
+    <div class="loader-mark" aria-hidden="true"></div>
+    <h1 class="loader-title">
+      <span>鸣</span><span>潮</span><span class="dot"> · </span><span>黑</span><span>海</span><span>岸</span><span>篇</span><span>章</span>
+    </h1>
+    <p class="loader-sub">BLACK SHORES · A NARRATIVE</p>
+    <p class="loader-enter">点 击 进 入</p>
+  </div>
+
+  <!-- Three.js 光标拖痕背景 -->
+  <canvas id="trail-canvas"></canvas>
+
+  <!-- 噪点颗粒层 -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- 自定义四芒星光标 -->
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!-- BGM 开关 -->
+  <button id="bgm-toggle" aria-label="音乐开关">
+    <span class="bgm-bars"><i></i><i></i><i></i><i></i></span>
+    <span class="bgm-label">音乐 关</span>
+  </button>
+
+  <main id="app">
+
+    <!-- ══ 序章 · 黑海岸 ══════════════════════ -->
+    <section id="intro" class="scene">
+      <div class="intro-bg">
+        <img src="photos/intro.jpg" alt="" />
+      </div>
+      <div class="intro-fog fog-1" aria-hidden="true"></div>
+      <div class="intro-fog fog-2" aria-hidden="true"></div>
+      <div class="intro-fog fog-3" aria-hidden="true"></div>
+      <div class="intro-content">
+        <p class="intro-kicker">BLACK SHORES · 1.3</p>
+        <h2 class="intro-title">
+          <span>黑</span><span>海</span><span>岸</span>
+        </h2>
+        <p class="intro-tagline">联结世界的使命，终将完成</p>
+        <div class="intro-rule"></div>
+        <p class="intro-desc">
+          索拉里斯风暴之上<br />
+          一座不为人知的孤岛<br />
+          守护着那些愿意去相信的人
+        </p>
+      </div>
+      <p class="intro-hint">SCROLL</p>
+    </section>
+
+    <!-- ══ 第一章 · 千咲 ═══════════════════════ -->
+    <section id="chisaki">
+      <div class="chisaki-sticky">
+        <div class="chisaki-track">
+
+          <!-- Slide A：图左文右 -->
+          <div class="chisaki-slide slide-a">
+            <div class="cs-photo-wrap">
+              <img src="photos/chisaki-1.jpg" alt="千咲" />
+            </div>
+            <div class="cs-text">
+              <p class="cs-num">CHAPTER  I</p>
+              <h2 class="cs-name">千<em>咲</em></h2>
+              <p class="cs-desc">
+                在黑海岸的每一次相遇<br />
+                都是命运精心编织的线索<br />
+                而她，是其中最难忘的那一笔
+              </p>
+            </div>
+          </div>
+
+          <!-- Slide B：全幅图 + 底部文字 -->
+          <div class="chisaki-slide slide-b">
+            <img class="slide-b-img" src="photos/chisaki-2.jpg" alt="千咲" />
+            <div class="slide-b-caption">
+              <p class="sbc-line">千咲所走过的路</p>
+              <p class="sbc-line">每一步都留有她的印记</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ 第二章 · 守岸人 ════════════════════ -->
+    <section id="watcher" class="scene">
+      <div class="watcher-inner">
+        <div class="watcher-poetry">
+          <p class="watcher-line wl-xl">漫长的守望</p>
+          <p class="watcher-line wl-lg">终于有人看见了她</p>
+          <p class="watcher-line wl-md">不是神明，也不是宿命</p>
+          <p class="watcher-line wl-md">只是一个愿意回头的旅人</p>
+          <div class="watcher-sep"></div>
+          <p class="watcher-line wl-sm">守岸人 · WATCHER OF THE SHORE</p>
+        </div>
+        <figure class="watcher-fig">
+          <img src="photos/watcher.jpg" alt="守岸人" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══ 结尾 · 泰提斯 ══════════════════════ -->
+    <section id="tethys" class="scene">
+      <div class="tethys-parallax">
+        <img class="tethys-bg-img" src="photos/tethys.jpg" alt="泰提斯" />
+        <div class="tethys-veil"></div>
+      </div>
+      <div class="tethys-content">
+        <p class="tethys-kicker">THE END · 泰提斯</p>
+        <h2 class="tethys-title">联结世界的救赎</h2>
+        <div class="tethys-lines">
+          <p class="tethys-line">漂泊者，你曾建立了这一切</p>
+          <p class="tethys-line">然后你离开，世界却记住了你</p>
+          <p class="tethys-line">今日，黑海岸重新启航</p>
+          <p class="tethys-line">联结世界的使命，终将完成</p>
+        </div>
+        <div class="tethys-mark" aria-hidden="true"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

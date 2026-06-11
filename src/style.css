@@ -1,0 +1,391 @@
+:root {
+  --bg: #060f1c;
+  --accent: #4d8ab5;
+  --ink: #e8e9f2;
+  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
+  --font-latin: 'Cormorant Garamond', serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.15) transparent; }
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+body {
+  background-color: #060f1c;
+  color: var(--ink);
+  font-family: var(--font-serif);
+  overflow-x: hidden;
+  cursor: none;
+}
+a, button { cursor: none; }
+
+/* ── 加载层 ─────────────────────────────── */
+#loader {
+  position: fixed; inset: 0; z-index: 100;
+  background: #060f1c;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 1.8rem;
+}
+.loader-mark {
+  width: 68px; height: 68px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 14px var(--accent));
+  position: relative;
+  opacity: 0;
+  transform: scale(0.82);
+}
+.loader-mark::after {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  background: var(--accent);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 8px var(--accent));
+}
+.loader-title {
+  font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+  font-weight: 600; letter-spacing: .32em; text-indent: .32em;
+  color: var(--ink);
+}
+.loader-title span { display: inline-block; opacity: 0; transform: translateY(18px); }
+.loader-title .dot { letter-spacing: .1em; }
+.loader-sub {
+  font-family: var(--font-latin);
+  font-size: .82rem; letter-spacing: .5em; text-indent: .5em;
+  color: rgba(232,233,242,.4);
+  opacity: 0;
+}
+.loader-enter {
+  margin-top: 2rem;
+  font-size: .95rem; letter-spacing: .6em; text-indent: .6em;
+  color: var(--accent);
+  opacity: 0;
+  animation: enter-pulse 2.2s ease-in-out infinite;
+}
+@keyframes enter-pulse { 50% { filter: brightness(1.7); } }
+
+/* ── 背景画布 / 颗粒 ─────────────────────── */
+#trail-canvas {
+  position: fixed; inset: 0; z-index: 1;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+.grain {
+  position: fixed; inset: -100%; z-index: 90; pointer-events: none; opacity: .06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 7s steps(10) infinite;
+}
+@keyframes grain {
+  0%,100%{transform:translate(0,0)} 10%{transform:translate(-5%,-8%)}
+  20%{transform:translate(-12%,4%)} 30%{transform:translate(6%,-12%)}
+  40%{transform:translate(-4%,14%)} 50%{transform:translate(-12%,8%)}
+  60%{transform:translate(12%,0%)} 70%{transform:translate(0%,12%)}
+  80%{transform:translate(3%,16%)} 90%{transform:translate(-8%,8%)}
+}
+
+/* ── 光标 ───────────────────────────────── */
+#cursor {
+  position: fixed; left: 0; top: 0; z-index: 99;
+  width: 24px; height: 24px;
+  margin: -12px 0 0 -12px;
+  background: #fff;
+  clip-path: polygon(50% 0%,57% 43%,100% 50%,57% 57%,50% 100%,43% 57%,0% 50%,43% 43%);
+  pointer-events: none;
+  mix-blend-mode: difference;
+  transition: transform .25s ease;
+}
+#cursor.is-active { transform: scale(2.2) rotate(45deg); }
+
+/* ── BGM ────────────────────────────────── */
+#bgm-toggle {
+  position: fixed; right: 2.4rem; top: 2.2rem; z-index: 60;
+  display: flex; align-items: center; gap: .8rem;
+  background: none; border: none; color: var(--ink);
+  opacity: 0;
+}
+.bgm-bars { display: flex; align-items: flex-end; gap: 3px; height: 14px; }
+.bgm-bars i { width: 2px; height: 4px; background: var(--accent); transition: height .3s; }
+#bgm-toggle.playing .bgm-bars i { animation: bars .9s ease-in-out infinite alternate; }
+#bgm-toggle.playing .bgm-bars i:nth-child(2) { animation-delay: .2s; }
+#bgm-toggle.playing .bgm-bars i:nth-child(3) { animation-delay: .45s; }
+#bgm-toggle.playing .bgm-bars i:nth-child(4) { animation-delay: .65s; }
+@keyframes bars { from{height:3px} to{height:14px} }
+.bgm-label { font-family: var(--font-serif); font-size: 1.05rem; letter-spacing: .3em; opacity: .85; }
+
+/* ════════════════════════════════════════
+   序章 · 黑海岸   全屏沉浸式
+════════════════════════════════════════ */
+#intro {
+  position: relative;
+  height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  z-index: 10;
+}
+.intro-bg {
+  position: absolute; inset: 0; z-index: 0;
+}
+.intro-bg img {
+  width: 100%; height: 115%; object-fit: cover;
+  object-position: center center;
+  will-change: transform;
+}
+.intro-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(6,15,28,.15) 0%, rgba(6,15,28,.72) 100%);
+}
+/* 浮雾 */
+.intro-fog {
+  position: absolute; border-radius: 50%;
+  filter: blur(70px); pointer-events: none; z-index: 1;
+  animation: fog-drift var(--dur,9s) ease-in-out infinite;
+}
+.fog-1 { width:60vw; height:45vh; top:5%; left:-15%;
+  background: radial-gradient(circle, rgba(77,138,181,.13) 0%, transparent 70%); --dur:9s; }
+.fog-2 { width:40vw; height:55vh; top:20%; right:-8%;
+  background: radial-gradient(circle, rgba(77,138,181,.09) 0%, transparent 70%); --dur:13s; animation-delay:-5s; }
+.fog-3 { width:38vw; height:38vh; bottom:10%; left:20%;
+  background: radial-gradient(circle, rgba(77,138,181,.11) 0%, transparent 70%); --dur:7.5s; animation-delay:-8s; }
+@keyframes fog-drift {
+  0%,100%{transform:translate(0,0) scale(1);opacity:.75}
+  50%{transform:translate(4vw,-3vh) scale(1.18);opacity:1}
+}
+.intro-content {
+  position: relative; z-index: 2; text-align: center;
+}
+.intro-kicker {
+  font-family: var(--font-latin); font-size: .82rem;
+  letter-spacing: .55em; color: var(--accent);
+  margin-bottom: 2rem; text-transform: uppercase;
+}
+.intro-title {
+  font-size: clamp(4.5rem, 11vw, 10rem);
+  font-weight: 900; line-height: 1.05; letter-spacing: .2em;
+  margin-bottom: 2.2rem;
+}
+.intro-title span { display: inline-block; opacity: 0; transform: translateY(32px); }
+.intro-tagline {
+  font-family: var(--font-latin); font-size: 1rem;
+  letter-spacing: .25em; color: rgba(232,233,242,.62);
+  margin-bottom: 2.6rem; opacity: 0;
+}
+.intro-rule {
+  width: 1px; height: 52px;
+  background: linear-gradient(var(--accent), transparent);
+  margin: 0 auto 2.6rem; opacity: 0;
+}
+.intro-desc {
+  font-size: 1rem; line-height: 2.4;
+  color: rgba(232,233,242,.52); opacity: 0;
+}
+.intro-hint {
+  position: absolute; bottom: 5vh; left: 50%; transform: translateX(-50%);
+  font-family: var(--font-latin); font-size: .7rem; letter-spacing: .5em;
+  color: rgba(232,233,242,.35); opacity: 0; z-index: 2;
+}
+.intro-hint::after {
+  content: ''; display: block; width: 1px; height: 36px;
+  margin: .8rem auto 0;
+  background: linear-gradient(var(--accent), transparent);
+  animation: drip 2s ease-in-out infinite;
+}
+@keyframes drip {
+  0%{transform:scaleY(0);transform-origin:top}
+  55%{transform:scaleY(1);transform-origin:top}
+  100%{transform:scaleY(0);transform-origin:bottom}
+}
+
+/* ════════════════════════════════════════
+   第一章 · 千咲   横向画廊式
+════════════════════════════════════════ */
+#chisaki {
+  height: 200vh;
+  position: relative;
+  z-index: 10;
+}
+.chisaki-sticky {
+  position: sticky; top: 0;
+  height: 100vh; overflow: hidden;
+}
+.chisaki-track {
+  display: flex; width: 200vw; height: 100%;
+  will-change: transform;
+}
+.chisaki-slide {
+  width: 100vw; height: 100%; flex-shrink: 0; position: relative;
+}
+
+/* Slide A */
+.slide-a {
+  display: grid; grid-template-columns: 58fr 42fr;
+}
+.cs-photo-wrap {
+  position: relative; overflow: hidden;
+  clip-path: inset(0 100% 0 0);
+}
+.cs-photo-wrap img {
+  width: 100%; height: 118%; object-fit: cover;
+  object-position: center top; will-change: transform;
+}
+.cs-photo-wrap::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to right, transparent 65%, #180810 100%);
+  pointer-events: none;
+}
+.cs-text {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 10vh 7vw 10vh 4vw;
+}
+.cs-num {
+  font-family: var(--font-latin); font-size: .78rem;
+  letter-spacing: .55em; color: var(--accent);
+  margin-bottom: 2.2rem; opacity: 0;
+}
+.cs-name {
+  font-size: clamp(3.5rem, 7vw, 6.5rem);
+  font-weight: 900; line-height: 1.05;
+  margin-bottom: 2.8rem; opacity: 0;
+}
+.cs-name em { font-style: normal; color: var(--accent); }
+.cs-desc {
+  font-size: 1rem; line-height: 2.15;
+  color: rgba(232,233,242,.55);
+  max-width: 28em; opacity: 0;
+}
+
+/* Slide B */
+.slide-b { position: relative; }
+.slide-b-img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.slide-b::before {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(to top, rgba(24,8,16,.92) 0%, rgba(24,8,16,.15) 55%, transparent 100%);
+}
+.slide-b-caption {
+  position: absolute; bottom: 12vh; left: 9vw; z-index: 2;
+}
+.sbc-line {
+  font-size: clamp(1.8rem, 3.8vw, 3.2rem);
+  font-weight: 700; line-height: 1.5;
+  opacity: 0; transform: translateY(22px);
+}
+
+/* ════════════════════════════════════════
+   第二章 · 守岸人   极简诗页式
+════════════════════════════════════════ */
+#watcher {
+  position: relative; z-index: 10;
+  min-height: 130vh;
+  display: flex; align-items: center;
+  padding: 15vh 10vw 15vh 13vw;
+}
+.watcher-inner {
+  width: 100%; display: flex; align-items: flex-start; gap: 6vw;
+}
+.watcher-poetry { flex: 1; padding-top: 4vh; }
+
+.watcher-line {
+  display: block; font-family: var(--font-serif);
+  opacity: 0; transform: translateY(52px);
+  margin-bottom: .55em;
+}
+.wl-xl {
+  font-size: clamp(3.5rem, 7.5vw, 7rem);
+  font-weight: 900; line-height: 1.1;
+  color: var(--ink);
+}
+.wl-lg {
+  font-size: clamp(2rem, 4.5vw, 4rem);
+  font-weight: 700; line-height: 1.25;
+  color: rgba(232,233,242,.88);
+}
+.wl-md {
+  font-size: clamp(1.1rem, 2.2vw, 2rem);
+  font-weight: 400; line-height: 1.6;
+  color: rgba(232,233,242,.62);
+  margin-bottom: .45em;
+}
+.wl-sm {
+  font-family: var(--font-latin);
+  font-size: .82rem; letter-spacing: .42em;
+  color: var(--accent); font-weight: 500;
+  margin-top: .5em;
+}
+.watcher-sep {
+  width: 44px; height: 1px;
+  background: var(--accent); opacity: 0;
+  margin: 2.2rem 0;
+}
+.watcher-fig {
+  width: clamp(220px, 26vw, 360px); flex-shrink: 0;
+  aspect-ratio: 3/4; overflow: hidden;
+  clip-path: inset(100% 0 0 0); margin-top: 8vh;
+}
+.watcher-fig img {
+  width: 100%; height: 115%; object-fit: cover;
+  object-position: center top;
+}
+
+/* ════════════════════════════════════════
+   结尾 · 泰提斯   多层视差式
+════════════════════════════════════════ */
+#tethys {
+  position: relative; z-index: 10;
+  height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.tethys-parallax {
+  position: absolute; inset: -20%; z-index: 0;
+}
+.tethys-bg-img {
+  width: 100%; height: 100%; object-fit: cover;
+  will-change: transform;
+}
+.tethys-veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(4,12,24,.48) 0%,
+    rgba(4,12,24,.22) 40%,
+    rgba(4,12,24,.68) 100%
+  );
+}
+.tethys-content {
+  position: relative; z-index: 1; text-align: center;
+}
+.tethys-kicker {
+  font-family: var(--font-latin); font-size: .82rem;
+  letter-spacing: .55em; color: var(--accent);
+  margin-bottom: 2rem; opacity: 0;
+}
+.tethys-title {
+  font-size: clamp(2.5rem, 5.5vw, 5rem);
+  font-weight: 900; letter-spacing: .12em;
+  margin-bottom: 3.2rem; opacity: 0;
+}
+.tethys-lines { margin-bottom: 4.5rem; }
+.tethys-line {
+  font-size: clamp(.9rem, 1.5vw, 1.25rem);
+  line-height: 2.4; letter-spacing: .08em;
+  color: rgba(232,233,242,.75);
+  opacity: 0; transform: translateY(26px);
+}
+.tethys-mark {
+  width: 38px; height: 38px; margin: 0 auto;
+  border: 1px solid var(--accent); border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 22px rgba(40,212,164,.3);
+  position: relative;
+}
+.tethys-mark::after {
+  content: ''; position: absolute; inset: 9px;
+  background: var(--accent); border-radius: 50%;
+  filter: drop-shadow(0 0 8px var(--accent));
+}
