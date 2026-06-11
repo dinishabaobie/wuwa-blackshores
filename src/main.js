@@ -96,7 +96,7 @@ gsap.fromTo(['.cs-num', '.cs-name', '.cs-desc'],
 )
 
 // 横向轨道随滚动平移
-const chisakiST = gsap.to('.chisaki-track', {
+gsap.to('.chisaki-track', {
   x: () => -window.innerWidth,
   ease: 'none',
   scrollTrigger: {
@@ -106,17 +106,16 @@ const chisakiST = gsap.to('.chisaki-track', {
   },
 })
 
-// Slide B 文字：过半后浮现
+// Slide B 文字：过半后浮现（只触发一次）
 gsap.set('.sbc-line', { opacity: 0, y: 22 })
+let slideBShown = false
 ScrollTrigger.create({
   trigger: '#chisaki',
   start: 'top top', end: 'bottom bottom',
   onUpdate(self) {
-    if (self.progress > 0.52) {
-      gsap.to('.sbc-line', {
-        opacity: 1, y: 0, stagger: 0.16, duration: 0.7,
-        ease: 'power2.out', overwrite: 'auto',
-      })
+    if (!slideBShown && self.progress > 0.52) {
+      slideBShown = true
+      gsap.to('.sbc-line', { opacity: 1, y: 0, stagger: 0.16, duration: 0.7, ease: 'power2.out' })
     }
   },
 })
