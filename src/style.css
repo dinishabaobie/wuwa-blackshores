@@ -14,7 +14,7 @@ html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 
 body {
-  background-color: #060f1c;
+  background-color: var(--bg);
   color: var(--ink);
   font-family: var(--font-serif);
   overflow-x: hidden;
@@ -90,7 +90,7 @@ a, button { cursor: none; }
 
 /* ── 光标 ───────────────────────────────── */
 #cursor {
-  position: fixed; left: 0; top: 0; z-index: 99;
+  position: fixed; left: 0; top: 0; z-index: 110;
   width: 24px; height: 24px;
   margin: -12px 0 0 -12px;
   background: #fff;

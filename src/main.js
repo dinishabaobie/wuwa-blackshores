@@ -2,7 +2,6 @@ import './style.css'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import Lenis from 'lenis'
-import { TrailBackground } from './trail.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -13,8 +12,13 @@ gsap.ticker.add((time) => lenis.raf(time * 1000))
 gsap.ticker.lagSmoothing(0)
 lenis.stop()
 
-// ── Three.js 光标拖痕 ─────────────────────────────────────────────
-const trail = new TrailBackground(document.getElementById('trail-canvas'))
+// ── Three.js 光标拖痕（动态加载，three.js 不阻塞首屏）─────────────
+let trail = null
+let currentAccent = '#4d8ab5'
+import('./trail.js').then(({ TrailBackground }) => {
+  trail = new TrailBackground(document.getElementById('trail-canvas'))
+  trail.setTint(currentAccent)
+})
 
 // ── BGM ──────────────────────────────────────────────────────────
 const bgm = new Audio('bgm.mp3')
@@ -64,8 +68,8 @@ SCENES.forEach((scene) => {
         '--bg': scene.bg, '--accent': scene.accent,
         duration: 1.1, ease: 'power2.out', overwrite: 'auto',
       })
-      document.body.style.backgroundColor = scene.bg
-      trail.setTint(scene.accent)
+      currentAccent = scene.accent
+      trail?.setTint(scene.accent)
     },
   })
 })
@@ -94,6 +98,12 @@ gsap.fromTo(['.cs-num', '.cs-name', '.cs-desc'],
     scrollTrigger: { trigger: '#chisaki', start: 'top 60%' },
   }
 )
+
+// 图片在画框内缓慢漂移（用掉 118% 的高度余量）
+gsap.fromTo('.cs-photo-wrap img', { yPercent: -8 }, {
+  yPercent: 0, ease: 'none',
+  scrollTrigger: { trigger: '#chisaki', start: 'top bottom', end: 'bottom top', scrub: true },
+})
 
 // 横向轨道随滚动平移
 gsap.to('.chisaki-track', {
@@ -136,6 +146,12 @@ gsap.fromTo('.watcher-fig',
   }
 )
 
+// 图片在画框内缓慢漂移（用掉 115% 的高度余量）
+gsap.fromTo('.watcher-fig img', { yPercent: -10 }, {
+  yPercent: 0, ease: 'none',
+  scrollTrigger: { trigger: '#watcher', start: 'top bottom', end: 'bottom top', scrub: true },
+})
+
 // ── 泰提斯：背景视差 + 内容浮现 ──────────────────────────────────
 gsap.to('.tethys-bg-img', {
   yPercent: -16, ease: 'none',
@@ -157,6 +173,10 @@ gsap.timeline({
   const loader = document.getElementById('loader')
   gsap.set('.loader-title span', { y: 18 })
 
+  // 加载层停留期间预热全部章节图片，避免滚动途中才开始加载
+  ;['photos/chisaki-1.jpg', 'photos/chisaki-2.jpg', 'photos/watcher.jpg', 'photos/tethys.jpg']
+    .forEach((src) => { const img = new Image(); img.src = src })
+
   gsap.timeline()
     .to('.loader-mark',      { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.4)' })
     .to('.loader-title span',{ opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: 'power2.out' }, '-=0.2')
@@ -173,7 +193,7 @@ gsap.timeline({
         // 入场时在屏幕中央撒几颗星
         const cx = innerWidth / 2, cy = innerHeight / 2
         ;[0, 100, 200, 300, 400].forEach((delay, i) =>
-          setTimeout(() => trail.burst(cx + (i - 2) * 120, cy + Math.sin(i * 2) * 50, 140 - Math.abs(i - 2) * 25), delay)
+          setTimeout(() => trail?.burst(cx + (i - 2) * 120, cy + Math.sin(i * 2) * 50, 140 - Math.abs(i - 2) * 25), delay)
         )
       }, '>-0.25')
       .to('#bgm-toggle',     { opacity: 1, duration: 0.6 })
