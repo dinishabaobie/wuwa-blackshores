@@ -71,6 +71,16 @@ a, button { cursor: none; }
   color: rgba(200,228,248,.92);
   text-shadow: 0 0 16px rgba(77,138,181,.45);
 }
+/* 终端输入光标 */
+.auth-caret {
+  display: inline-block;
+  width: .15em; height: 1.05em;
+  margin-left: .18em;
+  background: currentColor;
+  vertical-align: -0.14em;
+  animation: caret-blink 1.5s step-end infinite;
+}
+@keyframes caret-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 .auth-welcome {
   font-size: 1.15rem; letter-spacing: .45em; text-indent: .45em;
   color: var(--accent);
@@ -161,11 +171,11 @@ a, button { cursor: none; }
   position: fixed; left: 0; top: 0; z-index: 110;
   width: 28px; height: 28px;
   margin: -14px 0 0 -14px;
-  background: #fff;
+  background: #000;
   -webkit-mask: url('./black-shores-flower.webp') center / contain no-repeat;
   mask: url('./black-shores-flower.webp') center / contain no-repeat;
   pointer-events: none;
-  mix-blend-mode: difference;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.6));
   transition: transform .25s ease;
 }
 #cursor.is-active { transform: scale(2.2) rotate(45deg); }

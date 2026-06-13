@@ -170,8 +170,8 @@ gsap.timeline({
       .to('.auth-line.l1', { opacity: 1, duration: 0.4 }, 1.6)
       // 加载点先转约 2.9 秒，再确认权限
       .to('.auth-line.l2', { opacity: 1, duration: 0.4 }, 4.5)
-      // 权限确认后，核验身份那行原地淡出（不收起、不上移）
-      .to('.auth-line.l1', { opacity: 0, duration: 0.5, ease: 'power2.in' }, 4.9)
+      // 权限确认后，核验身份那行快速原地淡出（不收起、不上移）
+      .to('.auth-line.l1', { opacity: 0, duration: 0.25, ease: 'power2.in' }, 4.7)
 
     // 点击后进入主页
     loader.addEventListener('click', () => {
