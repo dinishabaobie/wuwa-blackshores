@@ -36,8 +36,8 @@ const cursorPos = { x: innerWidth / 2, y: innerHeight / 2 }
 const cursorTgt = { ...cursorPos }
 window.addEventListener('pointermove', (e) => { cursorTgt.x = e.clientX; cursorTgt.y = e.clientY })
 gsap.ticker.add(() => {
-  cursorPos.x += (cursorTgt.x - cursorPos.x) * 0.18
-  cursorPos.y += (cursorTgt.y - cursorPos.y) * 0.18
+  cursorPos.x += (cursorTgt.x - cursorPos.x) * 0.55
+  cursorPos.y += (cursorTgt.y - cursorPos.y) * 0.55
   cursor.style.translate = `${cursorPos.x}px ${cursorPos.y}px`
 })
 function bindCursor(el) {
@@ -81,17 +81,23 @@ const colorOf = (el) => ELEMENTS[el] || LOCK_COLOR
 const SUBJECTS = [
   { code: 'S-001', name: '守岸人', element: '核心', version: '1.x',
     photo: 'photos/shorekeeper.jpg', tagline: '漫长守望的终点，是第一个愿意回头的旅人。',
-    href: '#', status: 'archived' },
+    author: '腐朽的书', fx: 'butterfly', href: '#', status: 'archived' },
   { code: 'S-002', name: '千咲',   element: '湮灭', version: '1.x',
     photo: 'photos/chisaki-1.jpg', tagline: '命运精心编织的线索，最难忘的那一笔。',
-    author: 'Ui_uiiiiiiiii', href: '#', status: 'archived' },
+    author: 'Ui_uiiiiiiiii', fx: 'slash', href: '#', status: 'archived' },
   { code: 'S-003', name: '莫宁', element: '热熔', version: '1.x',
     photo: 'photos/mornie.jpg', tagline: '晨光里苏醒的炽焰，温柔，亦灼人。',
-    author: 'zutto_烧烤垃圾桶', href: '#', status: 'archived' },
-  { code: 'S-004', name: '— — —', element: '未知', version: '2.x',
+    author: 'zutto_烧烤垃圾桶', fx: 'holo', href: '#', status: 'archived' },
+  { code: 'S-004', name: '弗洛洛', element: '湮灭', version: '1.x',
+    photo: 'photos/floro.jpg', tagline: '携琴穿过薰衣草海，奏一曲温柔的湮灭。',
+    author: '雨鱼杆', fx: 'focus', href: '#', status: 'archived' },
+  { code: 'S-005', name: '爱弥斯', element: '热熔', version: '1.x',
+    photo: 'photos/aemis.png', tagline: '把炽热藏进一个心形里，悄悄递给你。',
+    author: 'Akatsuki葉月', href: '#', status: 'archived' },
+  { code: 'S-006', name: '— — —', element: '未知', version: '2.x',
     photo: '', tagline: '权限不足，等待泰缇斯授权。',
     href: '', status: 'locked' },
-  { code: 'S-005', name: '— — —', element: '未知', version: '2.x',
+  { code: 'S-007', name: '— — —', element: '未知', version: '2.x',
     photo: '', tagline: '权限不足，等待泰缇斯授权。',
     href: '', status: 'locked' },
 ]
@@ -113,10 +119,10 @@ function cardHTML(s) {
       </article>`
   }
   return `
-    <article class="subject-card" style="--card-accent:${accent}" data-element="${s.element}" data-status="archived" data-href="${s.href}">
+    <article class="subject-card${s.fx ? ' fx-' + s.fx : ''}" style="--card-accent:${accent}; --photo:url('${s.photo}')" data-element="${s.element}" data-status="archived" data-href="${s.href}">
       <div class="card-photo"><img src="${s.photo}" alt="${s.name}" loading="lazy" /></div>
       <div class="card-veil"></div>
-      <div class="card-scan"></div>
+      <div class="card-fx"></div>
       <span class="card-code">${s.code}</span>
       <div class="card-body">
         <span class="card-badge">${s.element}</span>
@@ -131,6 +137,71 @@ function cardHTML(s) {
 grid.innerHTML = SUBJECTS.map(cardHTML).join('')
 const cards = Array.from(grid.querySelectorAll('.subject-card'))
 cards.forEach(bindCursor)
+
+// ── 守岸人 · 蝴蝶来访：hover 时一只蝴蝶从屏幕外飞入，停 2 秒再离开 ──
+const guardianIndex = SUBJECTS.findIndex((s) => s.fx === 'butterfly')
+if (guardianIndex >= 0) {
+  const guardianCard = cards[guardianIndex]
+  let butterflyActive = false
+  guardianCard.addEventListener('pointerenter', () => {
+    if (butterflyActive) return
+    butterflyActive = true
+
+    const rect = guardianCard.getBoundingClientRect()
+    const ox = window.scrollX, oy = window.scrollY      // 转成文档坐标，跟随滚动
+    const lx = rect.left + ox + rect.width * 0.62 - 38   // 落点（偏右，对准守岸人头部）
+    const ly = rect.top + oy + rect.height * 0.10
+
+    const bf = document.createElement('div')
+    bf.className = 'visiting-butterfly'
+    bf.innerHTML = '<img src="photos/butterfly.png" alt="" />'
+    document.body.appendChild(bf)
+
+    gsap.set(bf, { x: ox + window.innerWidth + 80, y: ly - 130, rotation: -22, opacity: 0 })
+    gsap.timeline({ onComplete: () => { bf.remove(); butterflyActive = false } })
+      .to(bf, { opacity: 1, duration: 0.3 }, 0)
+      .to(bf, { x: lx + 75, y: ly - 65, rotation: -14, duration: 0.55, ease: 'sine.inOut' })
+      .to(bf, { x: lx - 38, y: ly - 22, rotation: 12, duration: 0.5, ease: 'sine.inOut' })
+      .to(bf, { x: lx, y: ly, rotation: 0, duration: 0.4, ease: 'power2.out',
+        onComplete: () => bf.classList.add('landed') })
+      .to(bf, { duration: 2 })                                  // 停留 2 秒
+      .add(() => bf.classList.remove('landed'))
+      .to(bf, { x: lx - 70, y: ly - 110, rotation: -16, duration: 0.45, ease: 'power1.in' })
+      .to(bf, { x: ox - 150, y: ly - 320, rotation: -10, opacity: 0, duration: 0.85, ease: 'power1.in' })
+  })
+}
+
+// ── 千咲 · 红色切割：hover 时全屏红色利刃斜向划过 ────────────────
+const slashIndex = SUBJECTS.findIndex((s) => s.fx === 'slash')
+if (slashIndex >= 0) {
+  const slashCard = cards[slashIndex]
+  let overlays = null
+  slashCard.addEventListener('pointerenter', () => {
+    if (overlays) return
+    const back = document.createElement('div')
+    back.className = 'slash-overlay is-back'
+    const front = document.createElement('div')
+    front.className = 'slash-overlay is-front'
+    for (let i = 0; i < 4; i++) {
+      const s = document.createElement('span')
+      s.className = 'slash'
+      s.style.setProperty('--y', (-10 + Math.random() * 120).toFixed(1) + '%')
+      s.style.setProperty('--ang', (Math.random() * 150 - 75).toFixed(1) + 'deg')  // 方向四散
+      s.style.setProperty('--th', (2 + Math.random() * 4).toFixed(1) + 'px')
+      ;(i % 2 === 0 ? back : front).appendChild(s)   // 交替分到前/后层
+    }
+    document.body.append(back, front)
+    overlays = [back, front]
+    requestAnimationFrame(() => { back.classList.add('show'); front.classList.add('show') })
+  })
+  slashCard.addEventListener('pointerleave', () => {
+    if (!overlays) return
+    const ovs = overlays
+    overlays = null
+    ovs.forEach((o) => o.classList.remove('show'))
+    setTimeout(() => ovs.forEach((o) => o.remove()), 420)
+  })
+}
 
 // 空状态提示
 const emptyTip = document.createElement('p')

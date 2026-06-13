@@ -40,8 +40,8 @@ const cursorPos = { x: innerWidth / 2, y: innerHeight / 2 }
 const cursorTgt = { ...cursorPos }
 window.addEventListener('pointermove', (e) => { cursorTgt.x = e.clientX; cursorTgt.y = e.clientY })
 gsap.ticker.add(() => {
-  cursorPos.x += (cursorTgt.x - cursorPos.x) * 0.18
-  cursorPos.y += (cursorTgt.y - cursorPos.y) * 0.18
+  cursorPos.x += (cursorTgt.x - cursorPos.x) * 0.55
+  cursorPos.y += (cursorTgt.y - cursorPos.y) * 0.55
   cursor.style.translate = `${cursorPos.x}px ${cursorPos.y}px`
 })
 document.querySelectorAll('button,a').forEach((el) => {
