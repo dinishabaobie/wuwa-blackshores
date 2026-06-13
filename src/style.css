@@ -366,6 +366,97 @@ a, button { cursor: none; }
 .back-home:hover .back-arrow { transform: translateX(-4px); }
 
 /* ════════════════════════════════════════
+   角色档案页 · profile.html
+════════════════════════════════════════ */
+#profile {
+  position: relative; z-index: 10;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18vh 6vw 16vh;
+}
+/* 背景红色利刃 */
+.pf-slashes {
+  position: absolute; inset: 0; z-index: -1;
+  pointer-events: none; overflow: hidden;
+  opacity: .5;
+}
+.pf-slash {
+  position: absolute; left: -40%; width: 180%;
+  top: var(--y); height: var(--th);
+  background: linear-gradient(90deg,
+    transparent 0%, rgba(255,42,64,0) 14%,
+    rgba(255,42,64,.85) 42%, #fff 50%, rgba(255,42,64,.85) 58%,
+    transparent 86%);
+  filter: drop-shadow(0 0 8px rgba(255,30,55,.9));
+  transform-origin: center center;
+  transform: rotate(var(--ang));
+}
+
+.pf-hero { text-align: center; margin-bottom: 9vh; }
+.pf-kicker {
+  font-family: var(--font-latin); font-size: .72rem;
+  letter-spacing: .5em; color: var(--accent);
+  margin-bottom: 1.6rem;
+}
+.pf-name {
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-weight: 900; letter-spacing: .14em;
+  line-height: 1.05; margin-bottom: 1.4rem;
+}
+.pf-meta {
+  display: flex; align-items: center; justify-content: center; gap: 1rem;
+  margin-bottom: 2.4rem;
+}
+.pf-code {
+  font-family: var(--font-latin); font-size: .72rem;
+  letter-spacing: .35em; color: rgba(232,233,242,.55);
+}
+.pf-sep { width: 28px; height: 1px; background: rgba(232,233,242,.25); }
+.pf-badge {
+  font-size: .68rem; letter-spacing: .2em;
+  color: var(--accent);
+  border: 1px solid currentColor; border-radius: 1px;
+  padding: .2rem .7rem;
+}
+.pf-epigraph {
+  font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+  font-weight: 300; font-style: italic;
+  color: rgba(232,233,242,.8);
+  letter-spacing: .05em;
+}
+
+.pf-story { margin-bottom: 10vh; }
+.pf-para {
+  font-size: clamp(.95rem, 1.5vw, 1.1rem);
+  line-height: 2.3; letter-spacing: .04em;
+  color: rgba(232,233,242,.72);
+  margin-bottom: 2rem;
+  text-align: justify;
+}
+.pf-para:last-child {
+  color: var(--accent);
+  font-weight: 400;
+  border-left: 2px solid var(--accent);
+  padding-left: 1.4rem;
+  text-align: left;
+}
+
+.pf-gallery { display: flex; flex-direction: column; gap: 4vh; }
+.pf-photo {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 24px 70px -30px rgba(0,0,0,.9);
+}
+.pf-photo img { width: 100%; height: auto; display: block; }
+.pf-photo figcaption {
+  position: absolute; right: .8rem; bottom: .6rem;
+  font-size: .56rem; letter-spacing: .06em;
+  color: rgba(232,233,242,.6);
+  text-shadow: 0 1px 4px rgba(0,0,0,.85);
+}
+
+/* ════════════════════════════════════════
    观测对象页 · 标题区
 ════════════════════════════════════════ */
 .subjects-hero {
@@ -611,6 +702,43 @@ a, button { cursor: none; }
 .slash-overlay.is-back  { z-index: 5; }   /* 档案之下 */
 .slash-overlay.is-front { z-index: 50; }  /* 档案之上 */
 .slash-overlay.show { opacity: 1; }
+
+/* 莫宁 · 璀璨之环 + 星辉 */
+.mornie-aura {
+  position: absolute; z-index: 48;
+  width: 0; height: 0;
+  pointer-events: none;
+  opacity: 0; transition: opacity .45s ease;
+}
+.mornie-aura.show { opacity: 1; }
+.mornie-aura .ring {
+  position: absolute; left: 0; top: 0;
+  width: var(--d); height: var(--d);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: conic-gradient(from 0deg,
+    rgba(255,200,120,0) 0deg, rgba(255,214,140,.7) 55deg, rgba(255,248,225,.9) 90deg,
+    rgba(255,200,120,0) 150deg, rgba(255,214,140,.6) 250deg, rgba(255,248,225,.75) 290deg,
+    rgba(255,200,120,0) 360deg);
+  -webkit-mask: radial-gradient(circle, transparent 0 47%, #000 49%, #000 50%, transparent 52%);
+          mask: radial-gradient(circle, transparent 0 47%, #000 49%, #000 50%, transparent 52%);
+  filter: drop-shadow(0 0 9px rgba(255,190,110,.6));
+  mix-blend-mode: screen;
+  animation: mornie-spin 9s linear infinite;
+}
+@keyframes mornie-spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+.mornie-aura .star {
+  position: absolute; transform: translate(-50%, -50%);
+  font-size: var(--sz); line-height: 1;
+  color: #ffd98a;
+  text-shadow: 0 0 7px rgba(255,200,120,.9);
+  mix-blend-mode: screen;
+  animation: mornie-twinkle 2.4s ease-in-out var(--dl) infinite;
+}
+@keyframes mornie-twinkle {
+  0%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(.4) rotate(0deg); }
+  50%      { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(45deg); }
+}
 .slash-overlay .slash {
   position: absolute; left: -40%; width: 180%;
   top: var(--y); height: var(--th);

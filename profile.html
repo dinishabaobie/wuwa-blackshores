@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>观测档案 · 黑海岸</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <style>html{background:#0a0710}</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300..900&family=Orbitron:wght@400..900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <canvas id="trail-canvas"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!-- BGM 开关 -->
+  <button id="bgm-toggle" aria-label="音乐开关">
+    <span class="bgm-bars"><i></i><i></i><i></i><i></i></span>
+    <span class="bgm-label">音乐 关</span>
+  </button>
+
+  <!-- 返回观测墙 -->
+  <a class="back-home" href="subjects.html" aria-label="返回观测对象">
+    <span class="back-arrow">←</span>
+    <span class="back-text">返回观测对象</span>
+  </a>
+
+  <main id="profile">
+    <!-- 内容由 profile.js 按 ?id 渲染 -->
+  </main>
+
+  <script type="module" src="/src/profile.js"></script>
+</body>
+</html>

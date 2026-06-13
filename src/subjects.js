@@ -84,10 +84,10 @@ const SUBJECTS = [
     author: '腐朽的书', fx: 'butterfly', href: '#', status: 'archived' },
   { code: 'S-002', name: '千咲',   element: '湮灭', version: '1.x',
     photo: 'photos/chisaki-1.jpg', tagline: '命运精心编织的线索，最难忘的那一笔。',
-    author: 'Ui_uiiiiiiiii', fx: 'slash', href: '#', status: 'archived' },
+    author: 'Ui_uiiiiiiiii', href: 'profile.html?id=chisaki', status: 'archived' },
   { code: 'S-003', name: '莫宁', element: '热熔', version: '1.x',
     photo: 'photos/mornie.jpg', tagline: '晨光里苏醒的炽焰，温柔，亦灼人。',
-    author: 'zutto_烧烤垃圾桶', fx: 'holo', href: '#', status: 'archived' },
+    author: 'zutto_烧烤垃圾桶', href: '#', status: 'archived' },
   { code: 'S-004', name: '弗洛洛', element: '湮灭', version: '1.x',
     photo: 'photos/floro.jpg', tagline: '携琴穿过薰衣草海，奏一曲温柔的湮灭。',
     author: '雨鱼杆', fx: 'focus', href: '#', status: 'archived' },
@@ -200,6 +200,51 @@ if (slashIndex >= 0) {
     overlays = null
     ovs.forEach((o) => o.classList.remove('show'))
     setTimeout(() => ovs.forEach((o) => o.remove()), 420)
+  })
+}
+
+// ── 莫宁 · 璀璨之环 + 星辉：hover 时卡片浮现暖金光环与星点 ──────
+const ringIndex = SUBJECTS.findIndex((s) => s.fx === 'ring')
+if (ringIndex >= 0) {
+  const ringCard = cards[ringIndex]
+  let aura = null
+  ringCard.addEventListener('pointerenter', () => {
+    if (aura) return
+    const rect = ringCard.getBoundingClientRect()
+    const cx = rect.left + window.scrollX + rect.width / 2
+    const cy = rect.top + window.scrollY + rect.height / 2
+    aura = document.createElement('div')
+    aura.className = 'mornie-aura'
+    aura.style.left = cx + 'px'
+    aura.style.top = cy + 'px'
+    aura.style.setProperty('--d', (rect.height * 1.08).toFixed(0) + 'px')
+
+    const ring = document.createElement('div')
+    ring.className = 'ring'
+    aura.appendChild(ring)
+
+    const R = rect.width
+    for (let i = 0; i < 14; i++) {
+      const st = document.createElement('span')
+      st.className = 'star'
+      const ang = Math.random() * Math.PI * 2
+      const rad = (0.5 + Math.random() * 0.7) * R
+      st.style.left = (Math.cos(ang) * rad).toFixed(0) + 'px'
+      st.style.top = (Math.sin(ang) * rad * 1.25).toFixed(0) + 'px'   // 纵向拉伸贴合竖卡
+      st.style.setProperty('--sz', (8 + Math.random() * 12).toFixed(0) + 'px')
+      st.style.setProperty('--dl', (Math.random() * 2).toFixed(2) + 's')
+      st.textContent = '✦'
+      aura.appendChild(st)
+    }
+    document.body.appendChild(aura)
+    requestAnimationFrame(() => aura.classList.add('show'))
+  })
+  ringCard.addEventListener('pointerleave', () => {
+    if (!aura) return
+    const a = aura
+    aura = null
+    a.classList.remove('show')
+    setTimeout(() => a.remove(), 420)
   })
 }
 
