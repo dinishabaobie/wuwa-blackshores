@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>观测对象 · 黑海岸</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300..900&family=Orbitron:wght@400..900&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <canvas id="trail-canvas"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div id="cursor" aria-hidden="true"></div>
+
+  <!-- BGM 开关 -->
+  <button id="bgm-toggle" aria-label="音乐开关">
+    <span class="bgm-bars"><i></i><i></i><i></i><i></i></span>
+    <span class="bgm-label">音乐 关</span>
+  </button>
+
+  <!-- 导航栏 -->
+  <nav class="nav-bar">
+    <a class="nav-logo" href="index.html" aria-label="返回主页">
+      <div class="nav-logo-icon" aria-hidden="true"></div>
+      <span class="nav-logo-text">黑海岸</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">首页 <em>Home</em></a></li>
+      <li><a href="#" class="nav-link">泰缇斯枢纽 <em>Tethys Hub</em></a></li>
+      <li><a href="subjects.html" class="nav-link is-active">观测对象 <em>Subjects</em></a></li>
+      <li><a href="#" class="nav-link">机密文献 <em>Archives</em></a></li>
+    </ul>
+  </nav>
+
+  <main id="app">
+
+    <!-- 页面标题 -->
+    <section class="subjects-hero">
+      <p class="subjects-kicker">TETHYS · OBSERVATION LOG</p>
+      <h1 class="subjects-heading">观测对象</h1>
+      <div class="subjects-rule"></div>
+      <p class="subjects-desc">以下档案由泰缇斯系统自动记录，内容已通过黑海岸权限核验。</p>
+    </section>
+
+    <!-- 千咲横向画廊 -->
+    <section id="chisaki">
+      <div class="chisaki-sticky">
+        <div class="chisaki-track">
+
+          <!-- Slide A：图左文右 -->
+          <div class="chisaki-slide slide-a">
+            <div class="cs-photo-wrap">
+              <img src="photos/chisaki-1.jpg" alt="千咲" loading="lazy" />
+            </div>
+            <div class="cs-text">
+              <p class="cs-num">SUBJECT  I</p>
+              <h2 class="cs-name">千<em>咲</em></h2>
+              <p class="cs-desc">
+                在黑海岸的每一次相遇<br />
+                都是命运精心编织的线索<br />
+                而她，是其中最难忘的那一笔
+              </p>
+            </div>
+          </div>
+
+          <!-- Slide B：全幅图 + 底部文字 -->
+          <div class="chisaki-slide slide-b">
+            <img class="slide-b-img" src="photos/chisaki-2.jpg" alt="千咲" loading="lazy" />
+            <div class="slide-b-caption">
+              <p class="sbc-line">千咲所走过的路</p>
+              <p class="sbc-line">每一步都留有她的印记</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部返回主页 -->
+  <a class="back-home" href="index.html" aria-label="返回主页">
+    <span class="back-arrow">←</span>
+    <span class="back-text">返回黑海岸</span>
+  </a>
+
+  <script type="module" src="/src/subjects.js"></script>
+</body>
+</html>

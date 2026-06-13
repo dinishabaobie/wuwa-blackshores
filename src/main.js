@@ -82,58 +82,6 @@ gsap.to('.intro-bg img', {
   },
 })
 
-// ── 千咲：横向画廊 ────────────────────────────────────────────────
-// 图片从右向左擦除进场
-gsap.fromTo('.cs-photo-wrap',
-  { clipPath: 'inset(0 100% 0 0)' },
-  { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: '#chisaki', start: 'top 68%', toggleActions: 'play none none reset' },
-  }
-)
-
-// 文字依次浮现
-gsap.fromTo(['.cs-num', '.cs-name', '.cs-desc'],
-  { opacity: 0, x: 28 },
-  { opacity: 1, x: 0, stagger: 0.14, duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#chisaki', start: 'top 60%', toggleActions: 'play none none reset' },
-  }
-)
-
-// 图片在画框内缓慢漂移（用掉 118% 的高度余量）
-gsap.fromTo('.cs-photo-wrap img', { yPercent: -8 }, {
-  yPercent: 0, ease: 'none',
-  scrollTrigger: { trigger: '#chisaki', start: 'top bottom', end: 'bottom top', scrub: true },
-})
-
-// 横向轨道随滚动平移
-gsap.to('.chisaki-track', {
-  x: () => -window.innerWidth,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#chisaki',
-    start: 'top top', end: 'bottom bottom',
-    scrub: 1,
-  },
-})
-
-// Slide B 文字：过半后浮现（只触发一次）
-gsap.set('.sbc-line', { opacity: 0, y: 22 })
-let slideBShown = false
-ScrollTrigger.create({
-  trigger: '#chisaki',
-  start: 'top top', end: 'bottom bottom',
-  onUpdate(self) {
-    if (!slideBShown && self.progress > 0.52) {
-      slideBShown = true
-      gsap.to('.sbc-line', { opacity: 1, y: 0, stagger: 0.16, duration: 0.7, ease: 'power2.out' })
-    }
-  },
-  onLeaveBack() {
-    slideBShown = false
-    gsap.set('.sbc-line', { opacity: 0, y: 22 })
-  },
-})
-
 // ── 守岸人：诗行逐行浮现 ──────────────────────────────────────────
 gsap.fromTo('.watcher-line, .watcher-sep',
   { opacity: 0, y: 52 },
@@ -175,6 +123,16 @@ gsap.timeline({
 // ── 加载动画 ──────────────────────────────────────────────────────
 {
   const loader = document.getElementById('loader')
+
+  // 从子页面返回时跳过 loader，直接进入主页内容
+  if (sessionStorage.getItem('bs_entered')) {
+    loader.remove()
+    lenis.start()
+    gsap.to('#bgm-toggle', { opacity: 1, duration: 0.6 })
+    const auth = document.querySelector('.intro-auth')
+    if (auth) { auth.style.visibility = 'hidden' }
+    gsap.to('.intro-tagline', { opacity: 1, duration: 0.8 })
+  } else {
   gsap.set('.loader-title span', { y: 18 })
 
   // 加载层停留期间预热全部章节图片，避免滚动途中才开始加载
@@ -190,6 +148,7 @@ gsap.timeline({
     .to('.loader-enter',     { opacity: 1, duration: 0.5 }, '+=0.35')
 
   loader.addEventListener('click', () => {
+    sessionStorage.setItem('bs_entered', '1')
     soundOn()
     gsap.timeline()
       .to(loader, { yPercent: -100, duration: 1.0, ease: 'power3.inOut' })
@@ -234,4 +193,5 @@ gsap.timeline({
         tick()
       }, '+=0.2')
   }, { once: true })
+  } // end else
 }
