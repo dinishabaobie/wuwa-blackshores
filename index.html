@@ -16,18 +16,23 @@
 </head>
 <body>
 
-  <!-- 开场加载层 -->
+  <!-- 开场加载层 · 泰缇斯身份核验（自动进入） -->
   <div id="loader">
     <div class="loader-bg" aria-hidden="true">
       <img src="photos/tethys.jpg" alt="" />
     </div>
-    <div class="loader-mark" aria-hidden="true"></div>
-    <p class="loader-tethys">TETHYS</p>
+    <div class="loader-core" aria-hidden="true">
+      <div class="loader-particles"></div>
+      <div class="loader-mark"></div>
+    </div>
+    <p class="loader-tethys">TETHYS TERMINAL</p>
     <h1 class="loader-title">
-      <span>黑</span><span>海</span><span>岸</span>
+      <span>泰</span><span>提</span><span>斯</span><span>终</span><span>端</span>
     </h1>
-    <p class="loader-sub">BLACK SHORES · A NARRATIVE</p>
-    <p class="loader-enter">点 击 进 入</p>
+    <div class="loader-auth-log" aria-hidden="true">
+      <p class="auth-line l1">核验访问者身份<span class="dots"><i>·</i><i>·</i><i>·</i></span></p>
+      <p class="auth-line l2">领导者权限已确认</p>
+    </div>
   </div>
 
   <!-- Three.js 光标拖痕背景 -->
@@ -66,13 +71,14 @@
           <li><a href="#intro" class="nav-link is-active">首页 <em>Home</em></a></li>
           <li><a href="#tethys" class="nav-link">泰缇斯枢纽 <em>Tethys Hub</em></a></li>
           <li><a href="subjects.html" class="nav-link">观测对象 <em>Subjects</em></a></li>
+          <li><a href="#" class="nav-link">演算回廊 <em>Deduction</em></a></li>
           <li><a href="#watcher" class="nav-link">机密文献 <em>Archives</em></a></li>
         </ul>
       </nav>
 
       <!-- 主内容 -->
       <div class="intro-content">
-        <h1 class="intro-title">在世界尽头，守望群星</h1>
+        <h1 class="intro-title">欢迎回到黑海岸</h1>
         <div class="intro-rule"></div>
         <p class="intro-auth">漂泊者权限已认证 · 欢迎回来</p>
         <h2 class="intro-tagline">

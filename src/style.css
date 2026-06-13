@@ -42,9 +42,52 @@ a, button { cursor: none; }
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(to bottom, rgba(6,15,28,.55) 0%, rgba(6,15,28,.82) 100%);
 }
-.loader-mark, .loader-tethys, .loader-title, .loader-sub, .loader-auth, .loader-enter {
+.loader-core, .loader-tethys, .loader-title, .loader-sub, .loader-auth-log {
   position: relative; z-index: 1;
 }
+/* 粒子汇聚 */
+.loader-core {
+  width: 88px; height: 88px;
+  display: grid; place-items: center;
+}
+.loader-particles { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.loader-particle {
+  position: absolute; left: 0; top: 0;
+  width: 3px; height: 3px; margin: -1.5px 0 0 -1.5px;
+  border-radius: 50%;
+  background: #eaf2ff;
+  box-shadow: 0 0 6px 1px rgba(120,150,220,.9);
+  pointer-events: none;
+}
+/* 核验日志 */
+.loader-auth-log { margin-top: 2.4rem; min-height: 6em; text-align: center; }
+.auth-line {
+  font-size: 1.05rem; letter-spacing: .24em;
+  color: rgba(160,200,240,.72);
+  opacity: 0; margin-bottom: 1rem;
+}
+.auth-line.l2 {
+  font-size: 1.5rem; font-weight: 500; letter-spacing: .3em;
+  color: rgba(200,228,248,.92);
+  text-shadow: 0 0 16px rgba(77,138,181,.45);
+}
+.auth-welcome {
+  font-size: 1.15rem; letter-spacing: .45em; text-indent: .45em;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(77,138,181,.6);
+  margin-top: .5rem;
+}
+/* 核验中的加载点 */
+.dots { display: inline-block; margin-left: .3em; letter-spacing: .25em; }
+.dots i {
+  font-style: normal; opacity: .2;
+  animation: dot-load 1.2s ease-in-out infinite;
+}
+.dots i:nth-child(2) { animation-delay: .2s; }
+.dots i:nth-child(3) { animation-delay: .4s; }
+@keyframes dot-load { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+/* 核验完成：加载点停止闪动、变为常亮 */
+.dots.done i { animation: none; opacity: 1; }
 .loader-tethys {
   font-family: var(--font-latin);
   font-size: clamp(0.7rem, 1.2vw, 1rem);

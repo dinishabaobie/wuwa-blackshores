@@ -119,78 +119,73 @@ gsap.timeline({
   .fromTo('.tethys-line',    { opacity: 0, y: 26 },  { opacity: 1, y: 0, stagger: 0.18, duration: 0.8 }, '-=0.4')
   .fromTo('.tethys-mark',    { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 1.2, ease: 'elastic.out(1, 0.55)' }, '>-0.2')
 
-// ── 加载动画 ──────────────────────────────────────────────────────
+// ── 初始页：泰缇斯身份核验，停顿后自动进入 ────────────────────────
 {
   const loader = document.getElementById('loader')
 
-  // 从子页面返回时跳过 loader，直接进入主页内容
-  if (sessionStorage.getItem('bs_entered')) {
-    loader.remove()
+  function revealMain() {
     lenis.start()
     gsap.to('#bgm-toggle', { opacity: 1, duration: 0.6 })
     const auth = document.querySelector('.intro-auth')
-    if (auth) { auth.style.visibility = 'hidden' }
-    gsap.to('.intro-tagline', { opacity: 1, duration: 0.8 })
+    if (auth) auth.style.visibility = 'hidden'
+    gsap.to('.intro-tagline', { opacity: 1, duration: 1.0, ease: 'power2.out' })
+  }
+
+  // 浏览器禁止无交互自动播放，首次任意点击再尝试开启 BGM
+  function armBgm() {
+    window.addEventListener('pointerdown', () => { if (bgm.paused) soundOn() }, { once: true })
+  }
+
+  if (sessionStorage.getItem('bs_entered')) {
+    loader.remove()
+    revealMain()
+    armBgm()
   } else {
-  gsap.set('.loader-title span', { y: 18 })
+    // 预热章节图片
+    ;['photos/chisaki-1.jpg', 'photos/watcher.jpg', 'photos/tethys.jpg']
+      .forEach((src) => { const img = new Image(); img.src = src })
 
-  // 加载层停留期间预热全部章节图片，避免滚动途中才开始加载
-  ;['photos/chisaki-1.jpg', 'photos/chisaki-2.jpg', 'photos/watcher.jpg']
-    .forEach((src) => { const img = new Image(); img.src = src })
+    // 生成汇聚粒子
+    const pc = loader.querySelector('.loader-particles')
+    const parts = []
+    for (let i = 0; i < 42; i++) {
+      const p = document.createElement('span')
+      p.className = 'loader-particle'
+      pc.appendChild(p)
+      const ang = Math.random() * Math.PI * 2
+      const dist = 80 + Math.random() * 160
+      gsap.set(p, { x: Math.cos(ang) * dist, y: Math.sin(ang) * dist, opacity: 0, scale: 0.4 + Math.random() * 0.9 })
+      parts.push(p)
+    }
 
-  gsap.timeline()
-    .from('.loader-bg',      { opacity: 0, scale: 1.08, duration: 1.3, ease: 'power2.out' })
-    .to('.loader-mark',      { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.4)' }, '-=0.6')
-    .to('.loader-tethys',    { opacity: 1, letterSpacing: '0.75em', duration: 0.8, ease: 'power2.out' }, '-=0.1')
-    .to('.loader-title span',{ opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: 'power2.out' }, '-=0.2')
-    .to('.loader-sub',       { opacity: 1, duration: 0.6 }, '-=0.1')
-    .to('.loader-enter',     { opacity: 1, duration: 0.5 }, '+=0.35')
+    gsap.set('.loader-title span', { y: 18 })
 
-  loader.addEventListener('click', () => {
-    sessionStorage.setItem('bs_entered', '1')
-    soundOn()
     gsap.timeline()
-      .to(loader, { yPercent: -100, duration: 1.0, ease: 'power3.inOut' })
-      .add(() => {
-        lenis.start()
-        loader.remove()
-        // 入场时在屏幕中央撒几颗星
-        const cx = innerWidth / 2, cy = innerHeight / 2
-        ;[0, 100, 200, 300, 400].forEach((delay, i) =>
-          setTimeout(() => trail?.burst(cx + (i - 2) * 120, cy + Math.sin(i * 2) * 50, 140 - Math.abs(i - 2) * 25), delay)
-        )
-      }, '>-0.25')
-      .to('#bgm-toggle',      { opacity: 1, duration: 0.6 })
-      .add(() => {
-        const auth = document.querySelector('.intro-auth')
-        const text = '泰缇斯感知到了您的存在  欢迎回家'
-        auth.textContent = ''
-        auth.classList.add('is-typing')
-        const cursor = document.createElement('span')
-        cursor.className = 'intro-auth-cursor'
-        auth.appendChild(cursor)
-        let i = 0
-        const tick = () => {
-          if (i < text.length) {
-            cursor.insertAdjacentText('beforebegin', text[i++])
-            setTimeout(tick, 80 + Math.random() * 60)
-          } else {
-            // 打字完成：光标停止闪烁并隐藏（不移除，避免行宽抖动）
-            setTimeout(() => {
-              cursor.style.animation = 'none'
-              cursor.style.opacity = '0'
-              // 2 秒后淡出整行，visibility:hidden 保住占位避免 flex 重排
-              setTimeout(() => {
-                gsap.to(auth, { opacity: 0, duration: 0.8, ease: 'power2.in', onComplete: () => {
-                  auth.style.visibility = 'hidden'
-                  gsap.to('.intro-tagline', { opacity: 1, duration: 1.2, ease: 'power2.out' })
-                }})
-              }, 2000)
-            }, 1200)
-          }
-        }
-        tick()
-      }, '+=0.2')
-  }, { once: true })
-  } // end else
+      .from('.loader-bg', { opacity: 0, scale: 1.08, duration: 1.4, ease: 'power2.out' }, 0)
+      .to(parts, { opacity: 1, duration: 0.4, stagger: 0.008 }, 0.2)
+      .to(parts, { x: 0, y: 0, scale: 0, opacity: 0, duration: 0.9, stagger: 0.01, ease: 'power2.in' }, 0.6)
+      .to('.loader-mark', { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.5)' }, 1.1)
+      .to('.loader-tethys', { opacity: 1, letterSpacing: '0.7em', duration: 0.7 }, 1.25)
+      .to('.loader-title span', { opacity: 1, y: 0, stagger: 0.07, duration: 0.5 }, 1.35)
+      .to('.auth-line.l1', { opacity: 1, duration: 0.4 }, 1.6)
+      // 加载点先转约 2.9 秒，再确认权限
+      .to('.auth-line.l2', { opacity: 1, duration: 0.4 }, 4.5)
+      // 权限确认后，核验身份那行原地淡出（不收起、不上移）
+      .to('.auth-line.l1', { opacity: 0, duration: 0.5, ease: 'power2.in' }, 4.9)
+
+    // 点击后进入主页
+    loader.addEventListener('click', () => {
+      soundOn()
+      sessionStorage.setItem('bs_entered', '1')
+      gsap.timeline()
+        .to(loader, { yPercent: -100, duration: 1.0, ease: 'power3.inOut' })
+        .add(() => {
+          loader.remove()
+          revealMain()
+          const cx = innerWidth / 2, cy = innerHeight / 2
+          ;[0, 120, 240].forEach((d, i) =>
+            setTimeout(() => trail?.burst(cx + (i - 1) * 130, cy, 130), d))
+        }, '>-0.25')
+    }, { once: true })
+  }
 }
