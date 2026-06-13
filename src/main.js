@@ -174,14 +174,17 @@ gsap.timeline({
   gsap.set('.loader-title span', { y: 18 })
 
   // 加载层停留期间预热全部章节图片，避免滚动途中才开始加载
-  ;['photos/chisaki-1.jpg', 'photos/chisaki-2.jpg', 'photos/watcher.jpg', 'photos/tethys.jpg']
+  ;['photos/chisaki-1.jpg', 'photos/chisaki-2.jpg', 'photos/watcher.jpg']
     .forEach((src) => { const img = new Image(); img.src = src })
 
   gsap.timeline()
-    .to('.loader-mark',      { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.4)' })
+    .from('.loader-bg',      { opacity: 0, scale: 1.08, duration: 1.3, ease: 'power2.out' })
+    .to('.loader-mark',      { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.4)' }, '-=0.6')
+    .to('.loader-tethys',    { opacity: 1, letterSpacing: '0.75em', duration: 0.8, ease: 'power2.out' }, '-=0.1')
     .to('.loader-title span',{ opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: 'power2.out' }, '-=0.2')
     .to('.loader-sub',       { opacity: 1, duration: 0.6 }, '-=0.1')
-    .to('.loader-enter',     { opacity: 1, duration: 0.5 }, '+=0.35')
+    .to('.loader-auth',      { opacity: 1, duration: 0.6 }, '+=0.3')
+    .to('.loader-enter',     { opacity: 1, duration: 0.5 }, '+=0.2')
 
   loader.addEventListener('click', () => {
     soundOn()

@@ -2,8 +2,8 @@
   --bg: #060f1c;
   --accent: #4d8ab5;
   --ink: #e8e9f2;
-  --font-serif: 'Noto Serif SC', 'Songti SC', serif;
-  --font-latin: 'Cormorant Garamond', serif;
+  --font-sans: 'Noto Sans SC', 'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', sans-serif;
+  --font-latin: 'Orbitron', 'Noto Sans SC', sans-serif;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,7 +16,7 @@ html.lenis, html.lenis body { height: auto; }
 body {
   background-color: var(--bg);
   color: var(--ink);
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   overflow-x: hidden;
   cursor: none;
 }
@@ -29,6 +29,28 @@ a, button { cursor: none; }
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   gap: 1.8rem;
+}
+.loader-bg {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden;
+}
+.loader-bg img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+}
+.loader-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(6,15,28,.55) 0%, rgba(6,15,28,.82) 100%);
+}
+.loader-mark, .loader-tethys, .loader-title, .loader-sub, .loader-auth, .loader-enter {
+  position: relative; z-index: 1;
+}
+.loader-tethys {
+  font-family: var(--font-latin);
+  font-size: clamp(0.7rem, 1.2vw, 1rem);
+  letter-spacing: .75em; text-indent: .75em;
+  color: var(--accent);
+  opacity: 0;
 }
 .loader-mark {
   width: 88px; height: 88px;
@@ -59,9 +81,14 @@ a, button { cursor: none; }
   color: rgba(232,233,242,.4);
   opacity: 0;
 }
-.loader-enter {
+.loader-auth {
   margin-top: 2rem;
-  font-size: .95rem; letter-spacing: .6em; text-indent: .6em;
+  font-size: .78rem; letter-spacing: .42em; text-indent: .42em;
+  color: rgba(232,233,242,.55);
+  opacity: 0;
+}
+.loader-enter {
+  font-size: 1.4rem; letter-spacing: .6em; text-indent: .6em;
   color: var(--accent);
   opacity: 0;
   animation: enter-pulse 2.2s ease-in-out infinite;
@@ -90,10 +117,11 @@ a, button { cursor: none; }
 /* ── 光标 ───────────────────────────────── */
 #cursor {
   position: fixed; left: 0; top: 0; z-index: 110;
-  width: 24px; height: 24px;
-  margin: -12px 0 0 -12px;
+  width: 28px; height: 28px;
+  margin: -14px 0 0 -14px;
   background: #fff;
-  clip-path: polygon(50% 0%,57% 43%,100% 50%,57% 57%,50% 100%,43% 57%,0% 50%,43% 43%);
+  -webkit-mask: url('./black-shores-flower.webp') center / contain no-repeat;
+  mask: url('./black-shores-flower.webp') center / contain no-repeat;
   pointer-events: none;
   mix-blend-mode: difference;
   transition: transform .25s ease;
@@ -114,7 +142,7 @@ a, button { cursor: none; }
 #bgm-toggle.playing .bgm-bars i:nth-child(3) { animation-delay: .45s; }
 #bgm-toggle.playing .bgm-bars i:nth-child(4) { animation-delay: .65s; }
 @keyframes bars { from{height:3px} to{height:14px} }
-.bgm-label { font-family: var(--font-serif); font-size: 1.05rem; letter-spacing: .3em; opacity: .85; }
+.bgm-label { font-family: var(--font-sans); font-size: 1.05rem; letter-spacing: .3em; opacity: .85; }
 
 /* ════════════════════════════════════════
    序章 · 黑海岸   全屏沉浸式
@@ -290,7 +318,7 @@ a, button { cursor: none; }
 .watcher-poetry { flex: 1; padding-top: 4vh; }
 
 .watcher-line {
-  display: block; font-family: var(--font-serif);
+  display: block; font-family: var(--font-sans);
   opacity: 0; transform: translateY(52px);
   margin-bottom: .55em;
 }
