@@ -14,7 +14,7 @@ gsap.ticker.lagSmoothing(0)
 // ── Three.js 光标拖痕 ─────────────────────────────────────────────
 import('./trail.js').then(({ TrailBackground }) => {
   const trail = new TrailBackground(document.getElementById('trail-canvas'))
-  trail.setTint('#d46880')
+  trail.setTint('#4d8ab5')
 })
 
 // ── BGM ──────────────────────────────────────────────────────────
@@ -40,61 +40,172 @@ gsap.ticker.add(() => {
   cursorPos.y += (cursorTgt.y - cursorPos.y) * 0.18
   cursor.style.translate = `${cursorPos.x}px ${cursorPos.y}px`
 })
-document.querySelectorAll('button,a').forEach((el) => {
+function bindCursor(el) {
   el.addEventListener('pointerenter', () => cursor.classList.add('is-active'))
   el.addEventListener('pointerleave', () => cursor.classList.remove('is-active'))
-})
+}
+document.querySelectorAll('button,a').forEach(bindCursor)
 
-// ── 主题色：千咲章节玫瑰色 ───────────────────────────────────────
-document.documentElement.style.setProperty('--accent', '#d46880')
-document.documentElement.style.setProperty('--bg', '#180810')
-document.body.style.backgroundColor = '#180810'
+// ── 主题色：黑海岸基调（每张卡再叠各自主题色）─────────────────────
+document.documentElement.style.setProperty('--accent', '#4d8ab5')
+document.documentElement.style.setProperty('--bg', '#060f1c')
+document.body.style.backgroundColor = '#060f1c'
 
 // ── 页面标题入场 ──────────────────────────────────────────────────
-gsap.from('.subjects-kicker', { opacity: 0, y: -12, duration: 0.7, delay: 0.2, ease: 'power2.out' })
-gsap.from('.subjects-heading', { opacity: 0, y: 24, duration: 0.9, delay: 0.4, ease: 'power3.out' })
-gsap.from(['.subjects-rule', '.subjects-desc'], { opacity: 0, y: 16, duration: 0.7, delay: 0.65, stagger: 0.1, ease: 'power2.out' })
-
-// ── 千咲：横向画廊 ────────────────────────────────────────────────
-gsap.fromTo('.cs-photo-wrap',
-  { clipPath: 'inset(0 100% 0 0)' },
-  { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: '#chisaki', start: 'top 68%', toggleActions: 'play none none reset' },
-  }
-)
-gsap.fromTo(['.cs-num', '.cs-name', '.cs-desc'],
-  { opacity: 0, x: 28 },
-  { opacity: 1, x: 0, stagger: 0.14, duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#chisaki', start: 'top 60%', toggleActions: 'play none none reset' },
-  }
-)
-gsap.fromTo('.cs-photo-wrap img', { yPercent: -8 }, {
-  yPercent: 0, ease: 'none',
-  scrollTrigger: { trigger: '#chisaki', start: 'top bottom', end: 'bottom top', scrub: true },
-})
-gsap.to('.chisaki-track', {
-  x: () => -window.innerWidth,
-  ease: 'none',
-  scrollTrigger: {
-    trigger: '#chisaki',
-    start: 'top top', end: 'bottom bottom',
-    scrub: 1,
-  },
+gsap.from('.subjects-kicker',  { opacity: 0, y: -12, duration: 0.7, delay: 0.2, ease: 'power2.out' })
+gsap.from('.subjects-heading', { opacity: 0, y: 24,  duration: 0.9, delay: 0.4, ease: 'power3.out' })
+gsap.from(['.subjects-rule', '.subjects-desc'], {
+  opacity: 0, y: 16, duration: 0.7, delay: 0.65, stagger: 0.1, ease: 'power2.out',
 })
 
-gsap.set('.sbc-line', { opacity: 0, y: 22 })
-let slideBShown = false
-ScrollTrigger.create({
-  trigger: '#chisaki',
-  start: 'top top', end: 'bottom bottom',
-  onUpdate(self) {
-    if (!slideBShown && self.progress > 0.52) {
-      slideBShown = true
-      gsap.to('.sbc-line', { opacity: 1, y: 0, stagger: 0.16, duration: 0.7, ease: 'power2.out' })
+/* ══════════════════════════════════════════════════════════════
+   鸣潮属性体系 —— 六大属性 + 核心（泰提斯专属）
+   ══════════════════════════════════════════════════════════════ */
+const ELEMENTS = {
+  冷凝: '#5ec5e8',   // Glacio
+  热熔: '#e8693f',   // Fusion
+  导电: '#a06be8',   // Electro
+  气动: '#4fd6a0',   // Aero
+  衍射: '#e8c84f',   // Spectro
+  湮灭: '#d45a9a',   // Havoc
+  核心: '#5a6ee6',   // 泰提斯专属 · 靛蓝
+}
+const ELEMENT_ORDER = Object.keys(ELEMENTS)
+const LOCK_COLOR = '#6b6f86'
+const colorOf = (el) => ELEMENTS[el] || LOCK_COLOR
+
+/* ══════════════════════════════════════════════════════════════
+   观测对象数据 —— 新增角色只需往这里加一条
+   element 取自上面 ELEMENTS；status: 'archived' 已归档 | 'locked' 待解密
+   ══════════════════════════════════════════════════════════════ */
+const SUBJECTS = [
+  { code: 'S-001', name: '守岸人', element: '核心', version: '1.x',
+    photo: 'photos/shorekeeper.jpg', tagline: '漫长守望的终点，是第一个愿意回头的旅人。',
+    href: '#', status: 'archived' },
+  { code: 'S-002', name: '千咲',   element: '湮灭', version: '1.x',
+    photo: 'photos/chisaki-1.jpg', tagline: '命运精心编织的线索，最难忘的那一笔。',
+    author: 'Ui_uiiiiiiiii', href: '#', status: 'archived' },
+  { code: 'S-003', name: '莫宁', element: '热熔', version: '1.x',
+    photo: 'photos/mornie.jpg', tagline: '晨光里苏醒的炽焰，温柔，亦灼人。',
+    author: 'zutto_烧烤垃圾桶', href: '#', status: 'archived' },
+  { code: 'S-004', name: '— — —', element: '未知', version: '2.x',
+    photo: '', tagline: '权限不足，等待泰缇斯授权。',
+    href: '', status: 'locked' },
+  { code: 'S-005', name: '— — —', element: '未知', version: '2.x',
+    photo: '', tagline: '权限不足，等待泰缇斯授权。',
+    href: '', status: 'locked' },
+]
+
+// ── 渲染卡片 ──────────────────────────────────────────────────────
+const grid = document.getElementById('wall-grid')
+
+function cardHTML(s) {
+  const accent = colorOf(s.element)
+  if (s.status === 'locked') {
+    return `
+      <article class="subject-card is-locked" style="--card-accent:${accent}" data-element="${s.element}" data-status="locked">
+        <span class="card-code">${s.code}</span>
+        <div class="card-lock">档案待解密</div>
+        <div class="card-body">
+          <span class="card-badge">${s.element}</span>
+          <h3 class="card-name">${s.name}</h3>
+        </div>
+      </article>`
+  }
+  return `
+    <article class="subject-card" style="--card-accent:${accent}" data-element="${s.element}" data-status="archived" data-href="${s.href}">
+      <div class="card-photo"><img src="${s.photo}" alt="${s.name}" loading="lazy" /></div>
+      <div class="card-veil"></div>
+      <div class="card-scan"></div>
+      <span class="card-code">${s.code}</span>
+      <div class="card-body">
+        <span class="card-badge">${s.element}</span>
+        <h3 class="card-name">${s.name}</h3>
+        <p class="card-tagline">${s.tagline}</p>
+        <span class="card-enter">进入档案 →</span>
+      </div>
+      ${s.author ? `<span class="card-author">@${s.author}</span>` : ''}
+    </article>`
+}
+
+grid.innerHTML = SUBJECTS.map(cardHTML).join('')
+const cards = Array.from(grid.querySelectorAll('.subject-card'))
+cards.forEach(bindCursor)
+
+// 空状态提示
+const emptyTip = document.createElement('p')
+emptyTip.className = 'wall-empty'
+emptyTip.textContent = '该属性暂无观测记录'
+grid.after(emptyTip)
+
+// 计数器
+document.getElementById('count-archived').textContent =
+  SUBJECTS.filter((s) => s.status === 'archived').length
+document.getElementById('count-locked').textContent =
+  SUBJECTS.filter((s) => s.status === 'locked').length
+
+// ── 筛选栏（全部 + 鸣潮六大属性 + 核心）─────────────────────────
+const filters = ['全部', ...ELEMENT_ORDER]
+const filterBar = document.getElementById('wall-filters')
+filterBar.innerHTML = filters
+  .map((el, i) => {
+    const accent = el === '全部' ? '' : ` style="--chip-accent:${colorOf(el)}"`
+    return `<button class="wall-chip${i === 0 ? ' is-active' : ''}" data-filter="${el}"${accent} role="tab">${el}</button>`
+  })
+  .join('')
+const chips = Array.from(filterBar.querySelectorAll('.wall-chip'))
+chips.forEach(bindCursor)
+
+const wall = document.querySelector('.subjects-wall')
+
+function applyFilter(filter) {
+  // 若已滚进网格区，先平滑带回结果区顶部，避免高度骤减导致的突然置顶
+  const targetY = wall.getBoundingClientRect().top + window.scrollY - 90
+  if (window.scrollY > targetY + 4) lenis.scrollTo(targetY, { duration: 0.6 })
+
+  let shown = 0
+  cards.forEach((c) => {
+    const show = filter === '全部' || c.dataset.element === filter
+    if (show) {
+      shown++
+      c.style.display = ''
+      gsap.fromTo(c, { opacity: 0, scale: 0.94 },
+        { opacity: 1, scale: 1, duration: 0.45, ease: 'power2.out', overwrite: true })
+    } else {
+      // 立即收起，网格即时重排，避免留存卡片延迟跳位
+      gsap.set(c, { opacity: 0 })
+      c.style.display = 'none'
     }
-  },
-  onLeaveBack() {
-    slideBShown = false
-    gsap.set('.sbc-line', { opacity: 0, y: 22 })
-  },
+  })
+  emptyTip.classList.toggle('is-visible', shown === 0)
+  ScrollTrigger.refresh()
+}
+
+chips.forEach((chip) => {
+  chip.addEventListener('click', () => {
+    chips.forEach((c) => c.classList.remove('is-active'))
+    chip.classList.add('is-active')
+    applyFilter(chip.dataset.filter)
+  })
+})
+
+// ── 点击：跳转个人档案 / 锁定卡抖动 ──────────────────────────────
+cards.forEach((card) => {
+  card.addEventListener('click', () => {
+    if (card.dataset.status === 'locked') {
+      card.classList.add('shake')
+      setTimeout(() => card.classList.remove('shake'), 420)
+      return
+    }
+    const href = card.dataset.href
+    if (href && href !== '#') window.location.href = href
+  })
+})
+
+// ── 入场动画：卡片随滚动逐个浮现 ────────────────────────────────
+gsap.set(cards, { opacity: 0, y: 36 })
+ScrollTrigger.batch(cards, {
+  start: 'top 92%',
+  onEnter: (batch) =>
+    gsap.to(batch, { opacity: 1, y: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', overwrite: true }),
 })

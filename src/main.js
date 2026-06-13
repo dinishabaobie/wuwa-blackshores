@@ -52,7 +52,6 @@ document.querySelectorAll('button,a').forEach((el) => {
 // ── 章节配色（直接 tween CSS 变量，与上一个站保持一致）────────────
 const SCENES = [
   { id: 'intro',   bg: '#060f1c', accent: '#4d8ab5' },
-  { id: 'chisaki', bg: '#180810', accent: '#d46880' },
   { id: 'watcher', bg: '#060e1a', accent: '#5eadc8' },
   { id: 'tethys',  bg: '#040c18', accent: '#28d4a4' },
 ]
