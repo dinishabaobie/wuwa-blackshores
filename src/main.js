@@ -87,7 +87,7 @@ gsap.to('.intro-bg img', {
 gsap.fromTo('.cs-photo-wrap',
   { clipPath: 'inset(0 100% 0 0)' },
   { clipPath: 'inset(0 0% 0 0)', duration: 1.2, ease: 'power3.out',
-    scrollTrigger: { trigger: '#chisaki', start: 'top 68%' },
+    scrollTrigger: { trigger: '#chisaki', start: 'top 68%', toggleActions: 'play none none reset' },
   }
 )
 
@@ -95,7 +95,7 @@ gsap.fromTo('.cs-photo-wrap',
 gsap.fromTo(['.cs-num', '.cs-name', '.cs-desc'],
   { opacity: 0, x: 28 },
   { opacity: 1, x: 0, stagger: 0.14, duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#chisaki', start: 'top 60%' },
+    scrollTrigger: { trigger: '#chisaki', start: 'top 60%', toggleActions: 'play none none reset' },
   }
 )
 
@@ -128,13 +128,17 @@ ScrollTrigger.create({
       gsap.to('.sbc-line', { opacity: 1, y: 0, stagger: 0.16, duration: 0.7, ease: 'power2.out' })
     }
   },
+  onLeaveBack() {
+    slideBShown = false
+    gsap.set('.sbc-line', { opacity: 0, y: 22 })
+  },
 })
 
 // ── 守岸人：诗行逐行浮现 ──────────────────────────────────────────
 gsap.fromTo('.watcher-line, .watcher-sep',
   { opacity: 0, y: 52 },
   { opacity: 1, y: 0, stagger: 0.22, duration: 0.9, ease: 'power2.out',
-    scrollTrigger: { trigger: '#watcher', start: 'top 65%' },
+    scrollTrigger: { trigger: '#watcher', start: 'top 65%', toggleActions: 'play none none reset' },
   }
 )
 
@@ -142,7 +146,7 @@ gsap.fromTo('.watcher-line, .watcher-sep',
 gsap.fromTo('.watcher-fig',
   { clipPath: 'inset(0 0 100% 0)' },
   { clipPath: 'inset(0 0 0% 0)', duration: 1.4, ease: 'power3.out',
-    scrollTrigger: { trigger: '#watcher', start: 'top 50%' },
+    scrollTrigger: { trigger: '#watcher', start: 'top 50%', toggleActions: 'play none none reset' },
   }
 )
 
@@ -161,7 +165,7 @@ gsap.to('.tethys-bg-img', {
 })
 
 gsap.timeline({
-  scrollTrigger: { trigger: '#tethys', start: 'top 68%' },
+  scrollTrigger: { trigger: '#tethys', start: 'top 68%', toggleActions: 'play none none reset' },
 })
   .fromTo('.tethys-kicker',  { opacity: 0 },         { opacity: 1, duration: 0.7 })
   .fromTo('.tethys-title',   { opacity: 0, y: 28 },  { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '-=0.2')
@@ -213,7 +217,18 @@ gsap.timeline({
             cursor.insertAdjacentText('beforebegin', text[i++])
             setTimeout(tick, 80 + Math.random() * 60)
           } else {
-            setTimeout(() => cursor.remove(), 1200)
+            // 打字完成：光标停止闪烁并隐藏（不移除，避免行宽抖动）
+            setTimeout(() => {
+              cursor.style.animation = 'none'
+              cursor.style.opacity = '0'
+              // 2 秒后淡出整行，visibility:hidden 保住占位避免 flex 重排
+              setTimeout(() => {
+                gsap.to(auth, { opacity: 0, duration: 0.8, ease: 'power2.in', onComplete: () => {
+                  auth.style.visibility = 'hidden'
+                  gsap.to('.intro-tagline', { opacity: 1, duration: 1.2, ease: 'power2.out' })
+                }})
+              }, 2000)
+            }, 1200)
           }
         }
         tick()

@@ -266,6 +266,7 @@ a, button { cursor: none; }
   font-weight: 300; line-height: 2.2;
   color: rgba(232,233,242,.55);
   letter-spacing: .06em;
+  opacity: 0;
 }
 .intro-auth {
   margin-top: 2.8rem;
