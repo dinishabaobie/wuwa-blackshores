@@ -183,8 +183,7 @@ gsap.timeline({
     .to('.loader-tethys',    { opacity: 1, letterSpacing: '0.75em', duration: 0.8, ease: 'power2.out' }, '-=0.1')
     .to('.loader-title span',{ opacity: 1, y: 0, stagger: 0.07, duration: 0.5, ease: 'power2.out' }, '-=0.2')
     .to('.loader-sub',       { opacity: 1, duration: 0.6 }, '-=0.1')
-    .to('.loader-auth',      { opacity: 1, duration: 0.6 }, '+=0.3')
-    .to('.loader-enter',     { opacity: 1, duration: 0.5 }, '+=0.2')
+    .to('.loader-enter',     { opacity: 1, duration: 0.5 }, '+=0.35')
 
   loader.addEventListener('click', () => {
     soundOn()
@@ -199,11 +198,25 @@ gsap.timeline({
           setTimeout(() => trail?.burst(cx + (i - 2) * 120, cy + Math.sin(i * 2) * 50, 140 - Math.abs(i - 2) * 25), delay)
         )
       }, '>-0.25')
-      .to('#bgm-toggle',     { opacity: 1, duration: 0.6 })
-      .fromTo('.intro-kicker',  { opacity: 0 },         { opacity: 1, duration: 0.7 }, '<')
-      .fromTo('.intro-title span', { opacity: 0, y: 32 }, { opacity: 1, y: 0, stagger: 0.12, duration: 0.75, ease: 'power3.out' }, '<+0.1')
-      .fromTo(['.intro-tagline', '.intro-rule'], { opacity: 0 }, { opacity: 1, duration: 0.8 }, '<+0.2')
-      .fromTo('.intro-desc', { opacity: 0 },         { opacity: 1, duration: 0.8 }, '<+0.1')
-      .fromTo('.intro-hint', { opacity: 0 },         { opacity: 1, duration: 0.6 }, '<+0.2')
+      .to('#bgm-toggle',      { opacity: 1, duration: 0.6 })
+      .add(() => {
+        const auth = document.querySelector('.intro-auth')
+        const text = '泰缇斯感知到了您的存在  欢迎回家'
+        auth.textContent = ''
+        auth.classList.add('is-typing')
+        const cursor = document.createElement('span')
+        cursor.className = 'intro-auth-cursor'
+        auth.appendChild(cursor)
+        let i = 0
+        const tick = () => {
+          if (i < text.length) {
+            cursor.insertAdjacentText('beforebegin', text[i++])
+            setTimeout(tick, 80 + Math.random() * 60)
+          } else {
+            setTimeout(() => cursor.remove(), 1200)
+          }
+        }
+        tick()
+      }, '+=0.2')
   }, { once: true })
 }
