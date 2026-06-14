@@ -92,7 +92,7 @@ const SUBJECTS = [
     photo: 'photos/floro.jpg', tagline: '携琴穿过薰衣草海，奏一曲温柔的湮灭。',
     author: '雨鱼杆', fx: 'focus', href: '#', status: 'archived' },
   { code: 'S-005', name: '爱弥斯', element: '热熔', version: '1.x',
-    photo: 'photos/aemis.png', tagline: '把炽热藏进一个心形里，悄悄递给你。',
+    photo: 'photos/aemis.jpg', tagline: '把炽热藏进一个心形里，悄悄递给你。',
     author: 'Akatsuki葉月', href: '#', status: 'archived' },
   { code: 'S-006', name: '达妮娅', element: '热熔', version: '1.x',
     photo: 'photos/dania.jpg', tagline: '以热熔之名，献上最炽热的馈赠。',
