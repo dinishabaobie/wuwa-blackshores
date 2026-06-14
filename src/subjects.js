@@ -105,7 +105,7 @@ const SUBJECTS = [
     author: '禾策', href: '#', status: 'archived' },
   { code: 'S-009', name: '菲比', element: '衍射', version: '1.x',
     photo: 'photos/phoebe.jpg', tagline: '在洒满阳光的海岸，把一个秘密轻轻藏进光里。',
-    author: 'ao～', href: '#', status: 'archived' },
+    author: 'HA', href: '#', status: 'archived' },
   { code: 'S-010', name: '— — —', element: '未知', version: '2.x',
     photo: '', tagline: '权限不足，等待泰缇斯授权。',
     href: '', status: 'locked' },
