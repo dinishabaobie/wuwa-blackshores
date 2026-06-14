@@ -399,6 +399,65 @@ a, button { cursor: none; }
 }
 
 /* ════════════════════════════════════════
+   泰提斯终端 HUD（主页首屏）
+════════════════════════════════════════ */
+.hud { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+.hud-corner {
+  position: absolute; width: 26px; height: 26px;
+  border: 1px solid rgba(160,200,240,.5);
+  opacity: 0;
+}
+.hud-corner.tl { top: 1.2rem; left: 1.2rem; border-right: 0; border-bottom: 0; }
+.hud-corner.tr { top: 1.2rem; right: 1.2rem; border-left: 0; border-bottom: 0; }
+.hud-corner.bl { bottom: 1.2rem; left: 1.2rem; border-right: 0; border-top: 0; }
+.hud-corner.br { bottom: 1.2rem; right: 1.2rem; border-left: 0; border-top: 0; }
+.hud-readout {
+  position: absolute;
+  font-family: var(--font-latin);
+  font-size: .62rem; letter-spacing: .18em;
+  color: rgba(160,200,240,.62);
+  text-shadow: 0 0 10px rgba(10,20,40,.85);
+  opacity: 0;
+  display: flex; align-items: center; gap: .5em;
+  white-space: nowrap;
+}
+.r-tl { top: 6rem; left: 4vw; }
+.r-tr { top: 6rem; right: 4vw; }
+.r-bl { bottom: 2.2rem; left: 4vw; }
+.r-br { bottom: 2.2rem; right: 4vw; }
+.hud-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #4fd6a0; box-shadow: 0 0 8px #4fd6a0;
+  animation: dot-pulse 2.4s ease-in-out infinite;
+}
+
+/* 命令行欢迎 */
+.intro-prompt {
+  font-family: var(--font-latin); font-size: .8rem;
+  letter-spacing: .1em; color: rgba(160,200,240,.85);
+  margin-bottom: 1.6rem; opacity: 0;
+  text-shadow: 0 0 12px rgba(10,20,40,.7);
+}
+.intro-prompt .cmd { color: var(--ink); }
+.prompt-caret {
+  display: inline-block; width: .5em; height: 1em;
+  background: currentColor; margin-left: .15em;
+  vertical-align: -0.12em;
+  animation: caret-blink 1.2s step-end infinite;
+}
+
+/* 导航系统编号 */
+.nav-sys {
+  font-style: normal; font-family: var(--font-latin);
+  font-size: .5rem; letter-spacing: .25em;
+  color: rgba(232,233,242,.22);
+  margin-top: .1rem;
+  transition: color .3s;
+}
+.nav-link:hover .nav-sys,
+.nav-link.is-active .nav-sys { color: var(--accent); }
+
+/* ════════════════════════════════════════
    底部返回按钮
 ════════════════════════════════════════ */
 .back-home {
@@ -738,8 +797,8 @@ a, button { cursor: none; }
   pointer-events: none; will-change: transform;
 }
 .visiting-butterfly > img {
-  display: block; width: 76px; height: auto;
-  filter: drop-shadow(0 0 10px rgba(95,115,235,.5));
+  display: block; width: 116px; height: auto;
+  filter: drop-shadow(0 0 12px rgba(95,115,235,.5));
   animation: bf-flap .24s ease-in-out infinite;
   transform-origin: center;
 }

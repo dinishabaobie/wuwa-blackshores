@@ -31,7 +31,7 @@
     </h1>
     <div class="loader-auth-log" aria-hidden="true">
       <p class="auth-line l1">核验访问者身份<span class="dots"><i>·</i><i>·</i><i>·</i></span></p>
-      <p class="auth-line l2">领导者权限已确认<span class="auth-caret" aria-hidden="true"></span></p>
+      <p class="auth-line l2">已确认<span class="auth-caret" aria-hidden="true"></span></p>
     </div>
   </div>
 
@@ -61,6 +61,18 @@
       <div class="intro-fog fog-2" aria-hidden="true"></div>
       <div class="intro-fog fog-3" aria-hidden="true"></div>
 
+      <!-- 泰提斯终端 HUD -->
+      <div class="hud" aria-hidden="true">
+        <span class="hud-corner tl"></span>
+        <span class="hud-corner tr"></span>
+        <span class="hud-corner bl"></span>
+        <span class="hud-corner br"></span>
+        <p class="hud-readout r-tl"><span class="hud-dot"></span>TETHYS OS v3.1 · 连接正常</p>
+        <p class="hud-readout r-tr"><span id="hud-time">--:--:--</span> · 22°32′N 114°3′E</p>
+        <p class="hud-readout r-bl">ROVER ID · 000-∞</p>
+        <p class="hud-readout r-br">SYNC <span id="hud-sync">98.7</span>%</p>
+      </div>
+
       <!-- 顶部导航栏 -->
       <nav class="nav-bar">
         <div class="nav-logo">
@@ -68,30 +80,24 @@
           <span class="nav-logo-text">黑海岸</span>
         </div>
         <ul class="nav-links">
-          <li><a href="#intro" class="nav-link is-active">首页 <em>Home</em></a></li>
-          <li><a href="#tethys" class="nav-link">泰缇斯枢纽 <em>Tethys Hub</em></a></li>
-          <li><a href="subjects.html" class="nav-link">观测对象 <em>Subjects</em></a></li>
-          <li><a href="#" class="nav-link">演算回廊 <em>Deduction</em></a></li>
-          <li><a href="#watcher" class="nav-link">机密文献 <em>Archives</em></a></li>
+          <li><a href="#intro" class="nav-link is-active">首页 <em>Home</em><i class="nav-sys">SYS.00</i></a></li>
+          <li><a href="#tethys" class="nav-link">泰缇斯枢纽 <em>Tethys Hub</em><i class="nav-sys">SYS.01</i></a></li>
+          <li><a href="subjects.html" class="nav-link">观测对象 <em>Subjects</em><i class="nav-sys">SYS.02</i></a></li>
+          <li><a href="#" class="nav-link">演算回廊 <em>Deduction</em><i class="nav-sys">SYS.03</i></a></li>
+          <li><a href="#watcher" class="nav-link">机密文献 <em>Archives</em><i class="nav-sys">SYS.04</i></a></li>
         </ul>
       </nav>
 
       <!-- 主内容 -->
       <div class="intro-content">
+        <p class="intro-prompt">tethys@blackshores:~$ <span class="cmd"></span><span class="prompt-caret"></span></p>
         <h1 class="intro-title">欢迎回家</h1>
         <div class="intro-rule"></div>
-        <p class="intro-auth">漂泊者权限已认证 · 欢迎回来</p>
         <h2 class="intro-tagline">
           游离于索拉里斯之外的孤岛，沉睡着数据深渊的繁花。<br />
           我们在此守望、记录、演算，直到命运重新抵达海岸。
         </h2>
       </div>
-
-      <!-- 底部状态栏 -->
-      <p class="intro-status">
-        <span class="status-dot" aria-hidden="true"></span>
-        System Status: Tethys Active. Awaiting Rover...
-      </p>
 
     </section>
 

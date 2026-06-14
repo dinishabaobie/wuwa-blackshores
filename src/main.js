@@ -123,12 +123,27 @@ gsap.timeline({
 {
   const loader = document.getElementById('loader')
 
+  function typeCmd() {
+    const el = document.querySelector('.intro-prompt .cmd')
+    if (!el) return
+    const text = '已接入泰提斯终端'
+    el.textContent = ''
+    let i = 0
+    const tick = () => {
+      if (i < text.length) { el.textContent += text[i++]; setTimeout(tick, 70 + Math.random() * 50) }
+    }
+    setTimeout(tick, 400)
+  }
+
   function revealMain() {
     lenis.start()
     gsap.to('#bgm-toggle', { opacity: 1, duration: 0.6 })
-    const auth = document.querySelector('.intro-auth')
-    if (auth) auth.style.visibility = 'hidden'
-    gsap.to('.intro-tagline', { opacity: 1, duration: 1.0, ease: 'power2.out' })
+    gsap.to('.intro-tagline', { opacity: 1, duration: 1.0, delay: 0.6, ease: 'power2.out' })
+    // HUD 开机式组装
+    gsap.to('.hud-corner', { opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out' })
+    gsap.to('.hud-readout', { opacity: 1, duration: 0.6, stagger: 0.1, delay: 0.15, ease: 'power2.out' })
+    gsap.to('.intro-prompt', { opacity: 1, duration: 0.4, delay: 0.1 })
+    typeCmd()
   }
 
   // 浏览器禁止无交互自动播放，首次任意点击再尝试开启 BGM
@@ -188,4 +203,19 @@ gsap.timeline({
         }, '>-0.25')
     }, { once: true })
   }
+}
+
+// ── 终端实时读出（时间 / 同步率）────────────────────────────────
+{
+  const pad = (n) => String(n).padStart(2, '0')
+  const hudTime = document.getElementById('hud-time')
+  const hudSync = document.getElementById('hud-sync')
+  if (hudTime) {
+    const upd = () => {
+      const d = new Date()
+      hudTime.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+    }
+    upd(); setInterval(upd, 1000)
+  }
+  if (hudSync) setInterval(() => { hudSync.textContent = (98 + Math.random()).toFixed(1) }, 2000)
 }
