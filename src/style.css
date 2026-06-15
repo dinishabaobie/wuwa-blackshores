@@ -199,6 +199,18 @@ a, button { cursor: none; }
 /* ════════════════════════════════════════
    导航页 · 黑海岸
 ════════════════════════════════════════ */
+/* 首页贯穿三节的纵向配色渐变（蓝 → 暖 → 紫），滚动平滑流转无硬缝 */
+#app.home-bg {
+  background: linear-gradient(
+    to bottom,
+    #0a1c38 0%,
+    #0a1c38 15%,
+    #2c1a10 50%,
+    #1a1242 85%,
+    #1a1242 100%
+  );
+}
+
 #intro {
   position: relative;
   height: 100vh;
@@ -206,8 +218,11 @@ a, button { cursor: none; }
   overflow: hidden;
   z-index: 10;
 }
+/* 底部淡出，让首屏照片平滑融进下方渐变 */
 .intro-bg {
   position: absolute; inset: 0; z-index: 0;
+  -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
 }
 .intro-bg img {
   width: 100%; height: 115%; object-fit: cover;

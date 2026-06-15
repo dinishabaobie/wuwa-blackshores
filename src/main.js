@@ -51,9 +51,9 @@ document.querySelectorAll('button,a').forEach((el) => {
 
 // ── 章节配色 · 随滚动连续插值（顺滑过渡）──────────────────────────
 const SCENES = [
-  { id: 'intro',   bg: '#060f1c', accent: '#4d8ab5' },
-  { id: 'watcher', bg: '#060e1a', accent: '#5eadc8' },
-  { id: 'tethys',  bg: '#040c18', accent: '#28d4a4' },
+  { id: 'intro',   bg: '#0a1c38', accent: '#5b9fd6' },   // 归家 · 潮汐蓝
+  { id: 'watcher', bg: '#2c1a10', accent: '#e0986a' },   // 守岸人 · 被看见的暖金
+  { id: 'tethys',  bg: '#1a1242', accent: '#9b7cf0' },   // 泰提斯 · 救赎之紫
 ]
 
 const root = document.documentElement
@@ -94,6 +94,7 @@ window.addEventListener('resize', () => { measureScenes(); paintScroll(); Scroll
 window.addEventListener('load', () => { measureScenes(); paintScroll() })
 paintScroll()
 
+
 // ── 序章：滚动时背景图视差 ────────────────────────────────────────
 gsap.to('.intro-bg img', {
   yPercent: 14, ease: 'none',
@@ -124,21 +125,13 @@ gsap.fromTo('.watcher-fig img', { yPercent: -10 }, {
   scrollTrigger: { trigger: '#watcher', start: 'top bottom', end: 'bottom top', scrub: true },
 })
 
-// ── 泰提斯：背景视差 + 内容浮现 ──────────────────────────────────
-gsap.to('.tethys-bg-img', {
-  yPercent: -16, ease: 'none',
-  scrollTrigger: {
-    trigger: '#tethys', start: 'top bottom', end: 'bottom top', scrub: true,
-  },
-})
-
+// ── 泰提斯：内容浮现 ──────────────────────────────────────────────
 gsap.timeline({
   scrollTrigger: { trigger: '#tethys', start: 'top 68%', toggleActions: 'play none none reset' },
 })
   .fromTo('.tethys-kicker',  { opacity: 0 },         { opacity: 1, duration: 0.7 })
   .fromTo('.tethys-title',   { opacity: 0, y: 28 },  { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '-=0.2')
   .fromTo('.tethys-line',    { opacity: 0, y: 26 },  { opacity: 1, y: 0, stagger: 0.18, duration: 0.8 }, '-=0.4')
-  .fromTo('.tethys-mark',    { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 1.2, ease: 'elastic.out(1, 0.55)' }, '>-0.2')
 
 // ── 初始页：泰缇斯身份核验，停顿后自动进入 ────────────────────────
 {
