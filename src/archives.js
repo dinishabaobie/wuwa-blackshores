@@ -45,18 +45,6 @@ document.querySelectorAll('button,a').forEach((el) => {
   el.addEventListener('pointerleave', () => cursor.classList.remove('is-active'))
 })
 
-// 折叠导航
-const navToggle = document.getElementById('navToggle')
-const navMenu = document.getElementById('navMenu')
-const miniNav = document.querySelector('.mini-nav')
-navToggle.addEventListener('click', (e) => {
-  e.stopPropagation()
-  navMenu.classList.toggle('open')
-  miniNav.classList.toggle('open')
-})
-document.addEventListener('click', (e) => {
-  if (!e.target.closest('.mini-nav')) { navMenu.classList.remove('open'); miniNav.classList.remove('open') }
-})
 
 // ── 数据 ──────────────────────────────────────────────────────────
 const groups = NODES.filter((n) => n.type === 'group')
@@ -86,13 +74,16 @@ function mdHTML(t) {
 }
 
 // ── 列顺序：主线 → 各势力 → 其它 ──────────────────────────────────
+const BS = (groups.find((g) => /黑海岸/.test(g.label)) || {}).label
 const CENTER = (groups.find((g) => /主线/.test(g.label)) || {}).label
 const ANTAG = (groups.find((g) => /残星会/.test(g.label)) || {}).label
+const INTL = (groups.find((g) => /国际/.test(g.label)) || {}).label
+const pinnedCols = [BS, CENTER, ANTAG, INTL].filter(Boolean)   // 置顶：黑海岸 / 中心主线 / 残星会 / 国际势力
 const verKey = (label) => {
   const m = label.match(/(\d+)\.(\d+)/)
   return m ? parseInt(m[1], 10) * 100 + parseInt(m[2], 10) : -1
 }
-const rest = groups.map((g) => g.label).filter((l) => l !== CENTER && l !== ANTAG)
+const rest = groups.map((g) => g.label).filter((l) => !pinnedCols.includes(l))
 rest.sort((a, b) => {            // 按版本逆序；无版本的排末尾
   const va = verKey(a), vb = verKey(b)
   if (va === vb) return 0
@@ -100,10 +91,7 @@ rest.sort((a, b) => {            // 按版本逆序；无版本的排末尾
   if (vb === -1) return -1
   return vb - va
 })
-const order = []
-if (CENTER) order.push(CENTER)
-if (ANTAG) order.push(ANTAG)
-rest.forEach((l) => order.push(l))
+const order = [...pinnedCols, ...rest]
 
 const cols = document.getElementById('cols')
 const cardById = {}
@@ -127,12 +115,15 @@ function makeColumn(label, arr, gcol) {
   })
   cols.appendChild(col)
 }
+// 列内按类别（颜色）归类排序
+const CAT_RANK = { '#1565C0': 1, '#2E7D32': 1, '#5D4037': 2, '#00838F': 3, '#8E24AA': 4, '#EF6C00': 5, '#455A64': 6 }
+const catSort = (arr) => arr.slice().sort((a, b) => (CAT_RANK[a.color] ?? 7) - (CAT_RANK[b.color] ?? 7))
 order.forEach((label) => {
-  makeColumn(label, items.filter((i) => i.group === label),
+  makeColumn(label, catSort(items.filter((i) => i.group === label)),
     colorOf((groups.find((g) => g.label === label) || {}).color))
 })
 const loose = items.filter((i) => i.group === null)
-if (loose.length) makeColumn('其它', loose, '#8aa0b8')
+if (loose.length) makeColumn('其它', catSort(loose), '#8aa0b8')
 
 // ── 关系连线层 ────────────────────────────────────────────────────
 const binner = document.getElementById('binner')
