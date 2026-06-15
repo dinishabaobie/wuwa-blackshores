@@ -935,6 +935,21 @@ a, button { cursor: none; }
   0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)}
   75%{transform:translateX(5px)}
 }
+/* 待解密卡（带剧照）：压暗 + 待解密覆盖，营造即将上线悬念 */
+.subject-card.is-locked.has-img { background: #0c0a12; }
+.subject-card.is-locked.has-img .card-photo img {
+  filter: grayscale(.4) brightness(.5);
+}
+.subject-card.is-locked.has-img .card-lock {
+  background: rgba(8,6,14,.22);
+  backdrop-filter: none;
+}
+.locked-tagline {
+  font-size: .68rem; line-height: 1.6;
+  letter-spacing: .05em;
+  color: rgba(232,233,242,.5);
+  margin-top: .3rem;
+}
 
 /* ════════════════════════════════════════
    第二章 · 守岸人   极简诗页式

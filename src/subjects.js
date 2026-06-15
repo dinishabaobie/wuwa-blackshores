@@ -106,12 +106,24 @@ const SUBJECTS = [
   { code: 'S-009', name: '菲比', element: '衍射', version: '1.x',
     photo: 'photos/phoebe.jpg', tagline: '在洒满阳光的海岸，把一个秘密轻轻藏进光里。',
     author: 'HA', href: '#', status: 'archived' },
-  { code: 'S-010', name: '— — —', element: '未知', version: '2.x',
-    photo: '', tagline: '权限不足，等待泰缇斯授权。',
-    href: '', status: 'locked' },
-  { code: 'S-011', name: '— — —', element: '未知', version: '2.x',
-    photo: '', tagline: '权限不足，等待泰缇斯授权。',
-    href: '', status: 'locked' },
+  { code: 'S-010', name: '泱泱·玄翎', element: '待解密', version: '2.x',
+    photo: 'photos/yangyang.jpg', tagline: '耳畔苍翎响远音',
+    author: '鸣潮', href: '', status: 'locked' },
+  { code: 'S-011', name: '心月狐', element: '待解密', version: '2.x',
+    photo: 'photos/xinyuehu.jpg', tagline: '朝月清辉照孤城',
+    author: '鸣潮', href: '', status: 'locked' },
+  { code: 'S-012', name: '锁暝', element: '待解密', version: '2.x',
+    photo: 'photos/suoming.jpg', tagline: '故锁旧契囚执念',
+    author: '鸣潮', href: '', status: 'locked' },
+  { code: 'S-013', name: '景燃', element: '待解密', version: '2.x',
+    photo: 'photos/jingran.jpg', tagline: '幽境今人亦独行',
+    author: '鸣潮', href: '', status: 'locked' },
+  { code: 'S-014', name: '穗穗', element: '待解密', version: '2.x',
+    photo: 'photos/suisui.jpg', tagline: '扇间朝晖道谜情',
+    author: '鸣潮', href: '', status: 'locked' },
+  { code: 'S-015', name: '清宵', element: '待解密', version: '2.x',
+    photo: 'photos/qingxiao.jpg', tagline: '仙音寒芒镇云关',
+    author: '鸣潮', href: '', status: 'locked' },
 ]
 
 // ── 渲染卡片 ──────────────────────────────────────────────────────
@@ -120,14 +132,18 @@ const grid = document.getElementById('wall-grid')
 function cardHTML(s) {
   const accent = colorOf(s.element)
   if (s.status === 'locked') {
+    const hasImg = !!s.photo
     return `
-      <article class="subject-card is-locked" style="--card-accent:${accent}" data-element="${s.element}" data-status="locked">
+      <article class="subject-card is-locked${hasImg ? ' has-img' : ''}" style="--card-accent:${accent}" data-element="${s.element}" data-status="locked">
+        ${hasImg ? `<div class="card-photo"><img src="${s.photo}" alt="" loading="lazy" /></div><div class="card-veil"></div>` : ''}
         <span class="card-code">${s.code}</span>
-        <div class="card-lock">档案待解密</div>
+        <div class="card-lock">待解密</div>
         <div class="card-body">
           <span class="card-badge">${s.element}</span>
           <h3 class="card-name">${s.name}</h3>
+          ${s.tagline ? `<p class="locked-tagline">${s.tagline}</p>` : ''}
         </div>
+        ${s.author ? `<span class="card-author">@${s.author}</span>` : ''}
       </article>`
   }
   return `
