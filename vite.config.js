@@ -9,6 +9,7 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
         subjects: resolve(__dirname, 'subjects.html'),
         profile: resolve(__dirname, 'profile.html'),
+        archives: resolve(__dirname, 'archives.html'),
       }
     }
   }
