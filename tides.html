@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>观测对象 · 黑海岸</title>
+  <title>观潮 · 黑海岸</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <style>html{background:#060f1c}</style>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -16,14 +16,13 @@
   <div class="grain" aria-hidden="true"></div>
   <div id="cursor" aria-hidden="true"></div>
 
-  <!-- BGM 开关 -->
   <button id="bgm-toggle" aria-label="音乐开关">
     <span class="bgm-bars"><i></i><i></i><i></i><i></i></span>
     <span class="bgm-label">音乐 关</span>
   </button>
 
   <!-- 导航栏 -->
-  <nav class="nav-bar">
+  <nav class="nav-bar nav-bar--fixed">
     <a class="nav-logo" href="index.html" aria-label="返回主页">
       <div class="nav-logo-icon" aria-hidden="true"></div>
       <span class="nav-logo-text">黑海岸</span>
@@ -31,43 +30,25 @@
     <ul class="nav-links">
       <li><a href="index.html" class="nav-link">首页 <em>Home</em></a></li>
       <li><a href="#" class="nav-link">泰缇斯枢纽 <em>Tethys Hub</em></a></li>
-      <li><a href="subjects.html" class="nav-link is-active">观测对象 <em>Subjects</em></a></li>
-      <li><a href="tides.html" class="nav-link">观潮 <em>Tides</em></a></li>
+      <li><a href="subjects.html" class="nav-link">观测对象 <em>Subjects</em></a></li>
+      <li><a href="tides.html" class="nav-link is-active">观潮 <em>Tides</em></a></li>
       <li><a href="archives.html" class="nav-link">群像 <em>Ensemble</em></a></li>
     </ul>
   </nav>
 
   <main id="app">
-
-    <!-- 页面标题 -->
     <section class="subjects-hero">
-      <p class="subjects-kicker">TETHYS · OBSERVATION LOG</p>
-      <h1 class="subjects-heading">观测对象</h1>
+      <p class="subjects-kicker">TETHYS · TIDES</p>
+      <h1 class="subjects-heading">观潮</h1>
       <div class="subjects-rule"></div>
-      <p class="subjects-desc">以下档案由泰缇斯系统自动记录，内容已通过黑海岸权限核验。</p>
+      <p class="subjects-desc">频率涌入，文明被记住</p>
     </section>
 
-    <!-- 泰缇斯监测墙 -->
-    <section class="subjects-wall">
-      <div class="wall-toolbar">
-        <p class="wall-counter">
-          已观测 <span id="count-archived">0</span>
-          <em>·</em>
-          待解密 <span id="count-locked">0</span>
-        </p>
-        <div class="wall-filters" id="wall-filters" role="tablist" aria-label="筛选"></div>
-      </div>
-      <div class="wall-grid" id="wall-grid"></div>
+    <section class="tides">
+      <div class="tide-list" id="tide-list"></div>
     </section>
-
   </main>
 
-  <!-- 底部返回主页 -->
-  <a class="back-home" href="index.html" aria-label="返回主页">
-    <span class="back-arrow">←</span>
-    <span class="back-text">返回黑海岸</span>
-  </a>
-
-  <script type="module" src="/src/subjects.js"></script>
+  <script type="module" src="/src/tides.js"></script>
 </body>
 </html>

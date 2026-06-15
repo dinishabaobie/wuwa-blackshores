@@ -49,29 +49,50 @@ document.querySelectorAll('button,a').forEach((el) => {
   el.addEventListener('pointerleave', () => cursor.classList.remove('is-active'))
 })
 
-// ── 章节配色（直接 tween CSS 变量，与上一个站保持一致）────────────
+// ── 章节配色 · 随滚动连续插值（顺滑过渡）──────────────────────────
 const SCENES = [
   { id: 'intro',   bg: '#060f1c', accent: '#4d8ab5' },
   { id: 'watcher', bg: '#060e1a', accent: '#5eadc8' },
   { id: 'tethys',  bg: '#040c18', accent: '#28d4a4' },
 ]
 
-SCENES.forEach((scene) => {
-  ScrollTrigger.create({
-    trigger: `#${scene.id}`,
-    start: 'top 55%',
-    end: 'bottom 55%',
-    onToggle(self) {
-      if (!self.isActive) return
-      gsap.to(document.documentElement, {
-        '--bg': scene.bg, '--accent': scene.accent,
-        duration: 1.1, ease: 'power2.out', overwrite: 'auto',
-      })
-      currentAccent = scene.accent
-      trail?.setTint(scene.accent)
-    },
+const root = document.documentElement
+const hexToRgb = (h) => { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255] }
+const toHex = ([r, g, b]) => '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')
+const lerp = (a, b, t) => Math.round(a + (b - a) * t)
+const mix = (c1, c2, t) => { const a = hexToRgb(c1), b = hexToRgb(c2); return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)] }
+
+const scenes = SCENES.map((s) => ({ ...s, el: document.getElementById(s.id) })).filter((s) => s.el)
+let centers = []
+function measureScenes() {
+  centers = scenes.map((s) => {
+    const r = s.el.getBoundingClientRect()
+    return r.top + window.scrollY + r.height / 2
   })
-})
+}
+
+// 根据视口中心所处位置，在相邻两节颜色之间实时插值
+function paintScroll() {
+  if (!centers.length) return
+  const anchor = window.scrollY + window.innerHeight / 2
+  let i = 0
+  while (i < centers.length - 1 && anchor > centers[i + 1]) i++
+  const j = Math.min(i + 1, scenes.length - 1)
+  const c0 = centers[i], c1 = centers[j]
+  const t = c1 === c0 ? 0 : Math.min(1, Math.max(0, (anchor - c0) / (c1 - c0)))
+  const bg = toHex(mix(scenes[i].bg, scenes[j].bg, t))
+  const ac = toHex(mix(scenes[i].accent, scenes[j].accent, t))
+  root.style.setProperty('--bg', bg)
+  root.style.setProperty('--accent', ac)
+  currentAccent = ac
+  trail?.setTint(ac)
+}
+
+measureScenes()
+lenis.on('scroll', paintScroll)
+window.addEventListener('resize', () => { measureScenes(); paintScroll(); ScrollTrigger.refresh() })
+window.addEventListener('load', () => { measureScenes(); paintScroll() })
+paintScroll()
 
 // ── 序章：滚动时背景图视差 ────────────────────────────────────────
 gsap.to('.intro-bg img', {
